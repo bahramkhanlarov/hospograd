@@ -1,0 +1,13 @@
+name = "hospograd-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hospograd"
+database_id = "REPLACE_WITH_REAL_D1_ID"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "hospograd-uploads"
