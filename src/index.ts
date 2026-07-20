@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { auth } from "./routes/auth";
 
 export type Bindings = {
   DB: D1Database;
@@ -10,5 +11,6 @@ export type Bindings = {
 export const app = new Hono<{ Bindings: Bindings }>();
 
 app.get("/health", (c) => c.json({ ok: true }));
+app.route("/auth", auth);
 
 export default app;
