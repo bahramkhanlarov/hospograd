@@ -1,4 +1,4 @@
-import { fromHex, toHex } from "./encoding";
+import { constantTimeEqual, fromHex, toHex } from "./encoding";
 
 const PBKDF2_ITERATIONS = 100_000;
 
@@ -24,5 +24,5 @@ export async function verifySecret(secret: string, stored: string): Promise<bool
   const [saltHex, hashHex] = stored.split(":");
   if (!saltHex || !hashHex) return false;
   const derived = await deriveBits(secret, fromHex(saltHex));
-  return toHex(derived) === hashHex;
+  return constantTimeEqual(toHex(derived), hashHex);
 }

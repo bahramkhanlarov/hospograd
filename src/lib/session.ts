@@ -1,4 +1,4 @@
-import { base64UrlDecode, base64UrlEncode, toHex } from "./encoding";
+import { base64UrlDecode, base64UrlEncode, constantTimeEqual, toHex } from "./encoding";
 
 export type SessionPayload = { userId: string; exp: number };
 
@@ -27,7 +27,7 @@ export async function verifySessionToken(token: string, secret: string): Promise
   const [payloadB64, signature] = token.split(".");
   if (!payloadB64 || !signature) return null;
   const expectedSignature = await sign(payloadB64, secret);
-  if (expectedSignature !== signature) return null;
+  if (!constantTimeEqual(expectedSignature, signature)) return null;
   const payload = JSON.parse(base64UrlDecode(payloadB64)) as SessionPayload;
   if (payload.exp < Date.now()) return null;
   return payload;
