@@ -13,21 +13,69 @@ export function generateOtpCode(): string {
   return String(array[0] % 1_000_000).padStart(6, "0");
 }
 
+const RESEND_MAX_ATTEMPTS = 3;
+const RESEND_RETRY_DELAY_MS = 200;
+
 async function sendOtpEmail(env: { RESEND_API_KEY: string }, email: string, code: string): Promise<void> {
   if (!env.RESEND_API_KEY) return; // no-op in test/dev without a real key
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "HospoGrad <noreply@hospograd.app>",
-      to: email,
-      subject: "Your HospoGrad verification code",
-      text: `Your verification code is ${code}. It expires in 10 minutes.`,
-    }),
-  });
+
+  let lastStatus: number | undefined;
+  let lastBody: string | undefined;
+  let lastNetworkError: unknown;
+
+  for (let attempt = 1; attempt <= RESEND_MAX_ATTEMPTS; attempt++) {
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "HospoGrad <noreply@hospograd.app>",
+          to: email,
+          subject: "Your HospoGrad verification code",
+          text: `Your verification code is ${code}. It expires in 10 minutes.`,
+        }),
+      });
+
+      if (response.ok) {
+        return;
+      }
+
+      lastStatus = response.status;
+      lastBody = await response.text();
+      console.warn("Resend send attempt failed", {
+        attempt,
+        maxAttempts: RESEND_MAX_ATTEMPTS,
+        status: lastStatus,
+        body: lastBody,
+      });
+    } catch (err) {
+      lastNetworkError = err;
+      console.warn("Resend send attempt threw", {
+        attempt,
+        maxAttempts: RESEND_MAX_ATTEMPTS,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+
+    if (attempt < RESEND_MAX_ATTEMPTS) {
+      await new Promise((resolve) => setTimeout(resolve, RESEND_RETRY_DELAY_MS));
+    }
+  }
+
+  if (lastNetworkError !== undefined && lastStatus === undefined) {
+    throw new Error(
+      `Failed to send OTP email via Resend after ${RESEND_MAX_ATTEMPTS} attempts: ${
+        lastNetworkError instanceof Error ? lastNetworkError.message : String(lastNetworkError)
+      }`
+    );
+  }
+
+  throw new Error(
+    `Failed to send OTP email via Resend after ${RESEND_MAX_ATTEMPTS} attempts: status=${lastStatus} body=${lastBody}`
+  );
 }
 
 auth.post("/signup", async (c) => {
@@ -62,7 +110,17 @@ auth.post("/signup", async (c) => {
     )
       .bind(id, username, email, passwordHash, school, otpHash, Date.now() + OTP_TTL_MS, Date.now())
       .run();
-    await sendOtpEmail(c.env, email, code);
+
+    try {
+      await sendOtpEmail(c.env, email, code);
+    } catch (err) {
+      console.warn("sendOtpEmail failed after retries", {
+        email,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return c.json({ error: "Failed to send verification email, please try again" }, 502);
+    }
+
     return c.json({ message: "Account created. Check your email for an OTP code." }, 201);
   }
 

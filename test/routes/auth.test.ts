@@ -1,5 +1,6 @@
-import { SELF, env } from "cloudflare:test";
+import { SELF, createExecutionContext, env, fetchMock, waitOnExecutionContext } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
+import app from "../../src/index";
 
 describe("POST /auth/signup (student)", () => {
   it("creates a pending user and stores an OTP hash", async () => {
@@ -74,6 +75,74 @@ describe("POST /auth/verify-otp", () => {
       otp_hash: string;
     }>();
     expect(otpRow.otp_hash).toBeTruthy();
+  });
+
+  it("verifies successfully with the real OTP code sent via Resend", async () => {
+    // SELF.fetch() dispatches to a separate worker instance whose bindings are
+    // fixed by wrangler.toml, so mutating `env` doesn't reach it. To supply a
+    // fake RESEND_API_KEY for just this test, invoke the app's fetch handler
+    // directly in this isolate (where fetchMock can also intercept fetch()).
+    let capturedBody: string | undefined;
+
+    fetchMock.activate();
+    fetchMock.disableNetConnect();
+    fetchMock
+      .get("https://api.resend.com")
+      .intercept({ path: "/emails", method: "POST" })
+      .reply((opts) => {
+        capturedBody = opts.body as string;
+        return { statusCode: 200, data: { id: "fake-resend-id" } };
+      });
+
+    try {
+      const testEnv = { ...env, RESEND_API_KEY: "fake-resend-key" };
+
+      const signupCtx = createExecutionContext();
+      const signupRes = await app.fetch(
+        new Request("https://example.com/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: "otpsuccessuser",
+            email: "otp-success@ehl.ch",
+            password: "hunter22-password",
+            school: "EHL",
+            status: "student",
+          }),
+        }),
+        testEnv,
+        signupCtx
+      );
+      await waitOnExecutionContext(signupCtx);
+
+      expect(signupRes.status).toBe(201);
+      expect(capturedBody).toBeTruthy();
+
+      const sentBody = JSON.parse(capturedBody as string) as { text: string };
+      const match = sentBody.text.match(/(\d{6})/);
+      expect(match).not.toBeNull();
+      const code = match![1];
+
+      const verifyRes = await SELF.fetch("https://example.com/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "otp-success@ehl.ch", code }),
+      });
+      expect(verifyRes.status).toBe(200);
+      const verifyBody = (await verifyRes.json()) as { message: string };
+      expect(verifyBody.message).toMatch(/verified/i);
+
+      const row = await env.DB.prepare(
+        "SELECT verification_state, otp_hash, otp_expires_at FROM users WHERE email = ?"
+      )
+        .bind("otp-success@ehl.ch")
+        .first<{ verification_state: string; otp_hash: string | null; otp_expires_at: number | null }>();
+      expect(row?.verification_state).toBe("verified");
+      expect(row?.otp_hash).toBeNull();
+      expect(row?.otp_expires_at).toBeNull();
+    } finally {
+      fetchMock.deactivate();
+    }
   });
 
   it("rejects an incorrect code", async () => {
