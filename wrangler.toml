@@ -12,7 +12,9 @@ migrations_dir = "migrations"
 binding = "UPLOADS"
 bucket_name = "hospograd-uploads"
 
-[vars]
-# Local/test default only. Production overrides this via `wrangler secret put SESSION_SECRET`,
-# which takes precedence over [vars] at deploy time.
-SESSION_SECRET = "dev-only-session-secret-replace-in-production"
+# No [vars] section: SESSION_SECRET and RESEND_API_KEY are secrets, not
+# non-secret config. They must never be committed here.
+# - Local dev / tests: provide them via the gitignored .dev.vars file
+#   (wrangler dev and vitest-pool-workers both load it automatically).
+# - Production: provide them via `wrangler secret put SESSION_SECRET` and
+#   `wrangler secret put RESEND_API_KEY` (see plan's "Post-Plan Manual Steps").
