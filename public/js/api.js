@@ -1,3 +1,9 @@
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 async function apiRequest(method, path, body, isForm) {
   const opts = { method, credentials: "same-origin" };
   if (body !== undefined) {

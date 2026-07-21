@@ -5,12 +5,6 @@ const slug = params.get("slug");
 
 renderSidebar(slug);
 
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 function renderPostList(posts) {
   const list = document.getElementById("post-list");
   if (posts.length === 0) {

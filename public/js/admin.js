@@ -1,11 +1,5 @@
 initNav();
 
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 async function act(userId, action) {
   await apiPost("/api/admin/verifications/" + encodeURIComponent(userId) + "/" + action);
   await loadQueue();

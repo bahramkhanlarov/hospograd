@@ -5,7 +5,7 @@ async function init() {
   const data = await apiGet("/api/categories");
   const select = document.getElementById("category");
   select.innerHTML = data.categories
-    .map((c) => '<option value="' + c.id + '">' + c.name + "</option>")
+    .map((c) => '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + "</option>")
     .join("");
 }
 

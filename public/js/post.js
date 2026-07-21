@@ -3,12 +3,6 @@ initNav();
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("id");
 
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 async function vote(targetType, targetId, value) {
   try {
     await apiPost("/api/votes", { targetType, targetId, value });

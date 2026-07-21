@@ -6,8 +6,8 @@ async function initNav() {
     nav.innerHTML =
       '<a href="/index.html" class="nav-brand">HospoGrad</a>' +
       '<span>' +
-      '<a href="/profile.html?username=' + encodeURIComponent(me.username) + '">u/' + me.username +
-      ' &middot; ' + me.school + ' &middot; ' + me.status + '</a>' +
+      '<a href="/profile.html?username=' + encodeURIComponent(me.username) + '">u/' + escapeHtml(me.username) +
+      ' &middot; ' + escapeHtml(me.school) + ' &middot; ' + escapeHtml(me.status) + '</a>' +
       '<a href="/create-post.html">New post</a>' +
       (me.isAdmin ? '<a href="/admin.html">Admin</a>' : '') +
       '<a href="#" id="logout-link">Log out</a>' +
@@ -32,7 +32,7 @@ async function renderSidebar(activeSlug) {
   const items = data.categories
     .map((c) => {
       const activeClass = c.slug === activeSlug ? " class=\"active\"" : "";
-      return '<li><a href="/category.html?slug=' + encodeURIComponent(c.slug) + '"' + activeClass + '>' + c.name + "</a></li>";
+      return '<li><a href="/category.html?slug=' + encodeURIComponent(c.slug) + '"' + activeClass + '>' + escapeHtml(c.name) + "</a></li>";
     })
     .join("");
   sidebar.innerHTML = "<h3>Categories</h3><ul>" + items + "</ul>";

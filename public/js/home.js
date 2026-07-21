@@ -23,12 +23,6 @@ function renderPostList(posts) {
     .join("");
 }
 
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 async function loadFeed() {
   const params = new URLSearchParams(window.location.search);
   const sort = params.get("sort") === "top" ? "top" : "new";

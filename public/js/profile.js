@@ -3,12 +3,6 @@ initNav();
 const params = new URLSearchParams(window.location.search);
 const username = params.get("username");
 
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 async function loadProfile() {
   const errorTarget = document.getElementById("profile-header");
   try {
