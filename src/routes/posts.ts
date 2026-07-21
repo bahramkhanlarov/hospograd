@@ -29,6 +29,17 @@ posts.post("/", requireVerified, rateLimitPosts, async (c) => {
   return c.json({ post: { id } }, 201);
 });
 
+posts.get("/", async (c) => {
+  const sort = c.req.query("sort") === "top" ? "p.score DESC" : "p.created_at DESC";
+  const { results } = await c.env.DB.prepare(
+    `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at, p.category_id,
+            u.username, u.school, u.status
+     FROM posts p JOIN users u ON u.id = p.author_id
+     ORDER BY ${sort}`
+  ).all();
+  return c.json({ posts: results });
+});
+
 posts.get("/:id", async (c) => {
   const id = c.req.param("id");
   const post = await c.env.DB.prepare(

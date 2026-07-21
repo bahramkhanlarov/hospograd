@@ -3,8 +3,9 @@ import type { Bindings } from "../index";
 import { hashSecret, verifySecret } from "../lib/crypto";
 import { newId } from "../lib/id";
 import { createSessionToken } from "../lib/session";
+import { requireAuth } from "../middleware/auth";
 
-export const auth = new Hono<{ Bindings: Bindings }>();
+export const auth = new Hono<{ Bindings: Bindings; Variables: { userId: string } }>();
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 
@@ -213,4 +214,29 @@ auth.post("/login", async (c) => {
     `session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`
   );
   return c.json({ message: "Logged in" });
+});
+
+auth.get("/me", requireAuth, async (c) => {
+  const user = await c.env.DB.prepare(
+    "SELECT username, school, status, verification_state, is_admin FROM users WHERE id = ?"
+  )
+    .bind(c.get("userId"))
+    .first<{ username: string; school: string; status: string; verification_state: string; is_admin: number }>();
+
+  if (!user) {
+    return c.json({ error: "User not found" }, 404);
+  }
+
+  return c.json({
+    username: user.username,
+    school: user.school,
+    status: user.status,
+    verificationState: user.verification_state,
+    isAdmin: user.is_admin === 1,
+  });
+});
+
+auth.post("/logout", requireAuth, (c) => {
+  c.header("Set-Cookie", "session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0");
+  return c.json({ message: "Logged out" });
 });
