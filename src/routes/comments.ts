@@ -18,6 +18,15 @@ comments.post("/:postId/comments", requireVerified, async (c) => {
     return c.json({ error: "Post not found" }, 404);
   }
 
+  if (parentCommentId) {
+    const parentComment = await c.env.DB.prepare("SELECT id FROM comments WHERE id = ? AND post_id = ?")
+      .bind(parentCommentId, postId)
+      .first();
+    if (!parentComment) {
+      return c.json({ error: "Invalid parentCommentId: must reference an existing comment on this post" }, 400);
+    }
+  }
+
   const id = newId();
   await c.env.DB.prepare(
     `INSERT INTO comments (id, post_id, parent_comment_id, author_id, body, score, created_at)

@@ -62,4 +62,40 @@ describe("comments", () => {
     });
     expect(res.status).toBe(401);
   });
+
+  it("rejects a parentCommentId that does not exist", async () => {
+    const token = await makeVerifiedUser("commenter-3");
+    const postId = await makePost(token);
+
+    const res = await SELF.fetch(`https://example.com/posts/${postId}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "orphan reply", parentCommentId: "nonexistent-id" }),
+    });
+    expect(res.status).toBe(400);
+    const { error } = (await res.json()) as { error: string };
+    expect(error).toBe("Invalid parentCommentId: must reference an existing comment on this post");
+  });
+
+  it("rejects a parentCommentId that belongs to a different post", async () => {
+    const token = await makeVerifiedUser("commenter-4");
+    const postA = await makePost(token);
+    const postB = await makePost(token);
+
+    const commentOnA = await SELF.fetch(`https://example.com/posts/${postA}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "Comment on post A" }),
+    });
+    const { comment } = (await commentOnA.json()) as { comment: { id: string } };
+
+    const crossPostReply = await SELF.fetch(`https://example.com/posts/${postB}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "Cross-post reply", parentCommentId: comment.id }),
+    });
+    expect(crossPostReply.status).toBe(400);
+    const { error } = (await crossPostReply.json()) as { error: string };
+    expect(error).toBe("Invalid parentCommentId: must reference an existing comment on this post");
+  });
 });
