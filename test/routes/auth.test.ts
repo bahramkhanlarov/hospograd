@@ -4,7 +4,7 @@ import app from "../../src/index";
 
 describe("POST /auth/signup (student)", () => {
   it("creates a pending user and stores an OTP hash", async () => {
-    const res = await SELF.fetch("https://example.com/auth/signup", {
+    const res = await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -27,7 +27,7 @@ describe("POST /auth/signup (student)", () => {
   });
 
   it("rejects a duplicate username", async () => {
-    await SELF.fetch("https://example.com/auth/signup", {
+    await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -38,7 +38,7 @@ describe("POST /auth/signup (student)", () => {
         status: "student",
       }),
     });
-    const res = await SELF.fetch("https://example.com/auth/signup", {
+    const res = await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -55,7 +55,7 @@ describe("POST /auth/signup (student)", () => {
 
 describe("POST /auth/verify-otp", () => {
   it("verifies the user when the code matches and is not expired", async () => {
-    await SELF.fetch("https://example.com/auth/signup", {
+    await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -99,7 +99,7 @@ describe("POST /auth/verify-otp", () => {
 
       const signupCtx = createExecutionContext();
       const signupRes = await app.fetch(
-        new Request("https://example.com/auth/signup", {
+        new Request("https://example.com/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -123,7 +123,7 @@ describe("POST /auth/verify-otp", () => {
       expect(match).not.toBeNull();
       const code = match![1];
 
-      const verifyRes = await SELF.fetch("https://example.com/auth/verify-otp", {
+      const verifyRes = await SELF.fetch("https://example.com/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: "otp-success@ehl.ch", code }),
@@ -146,7 +146,7 @@ describe("POST /auth/verify-otp", () => {
   });
 
   it("rejects an incorrect code", async () => {
-    await SELF.fetch("https://example.com/auth/signup", {
+    await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -157,7 +157,7 @@ describe("POST /auth/verify-otp", () => {
         status: "student",
       }),
     });
-    const res = await SELF.fetch("https://example.com/auth/verify-otp", {
+    const res = await SELF.fetch("https://example.com/api/auth/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "otp2@ehl.ch", code: "000000" }),

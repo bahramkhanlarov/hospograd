@@ -18,14 +18,14 @@ describe("POST /reports", () => {
     const reporterToken = await makeUser("reporter-1");
     const adminToken = await makeUser("admin-reports-1", { isAdmin: true });
 
-    const createRes = await SELF.fetch("https://example.com/reports", {
+    const createRes = await SELF.fetch("https://example.com/api/reports", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${reporterToken}` },
       body: JSON.stringify({ targetType: "post", targetId: "some-post-id", reason: "Spam" }),
     });
     expect(createRes.status).toBe(201);
 
-    const listRes = await SELF.fetch("https://example.com/admin/reports", {
+    const listRes = await SELF.fetch("https://example.com/api/admin/reports", {
       headers: { Cookie: `session=${adminToken}` },
     });
     expect(listRes.status).toBe(200);
@@ -35,7 +35,7 @@ describe("POST /reports", () => {
 
   it("rejects non-admins from listing reports", async () => {
     const token = await makeUser("reporter-2");
-    const res = await SELF.fetch("https://example.com/admin/reports", { headers: { Cookie: `session=${token}` } });
+    const res = await SELF.fetch("https://example.com/api/admin/reports", { headers: { Cookie: `session=${token}` } });
     expect(res.status).toBe(403);
   });
 });

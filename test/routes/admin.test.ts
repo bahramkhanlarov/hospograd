@@ -16,7 +16,7 @@ async function makeUser(id: string, opts: { isAdmin?: boolean; state?: string } 
 describe("admin verification queue", () => {
   it("rejects non-admins", async () => {
     const token = await makeUser("admin-test-1");
-    const res = await SELF.fetch("https://example.com/admin/verifications", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications", {
       headers: { Cookie: `session=${token}` },
     });
     expect(res.status).toBe(403);
@@ -31,7 +31,7 @@ describe("admin verification queue", () => {
       .bind(await hashSecret("x"))
       .run();
 
-    const res = await SELF.fetch("https://example.com/admin/verifications", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications", {
       headers: { Cookie: `session=${adminToken}` },
     });
     expect(res.status).toBe(200);
@@ -48,7 +48,7 @@ describe("admin verification queue", () => {
       .bind(await hashSecret("x"))
       .run();
 
-    const res = await SELF.fetch("https://example.com/admin/verifications/pending-2/approve", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications/pending-2/approve", {
       method: "POST",
       headers: { Cookie: `session=${adminToken}` },
     });
@@ -69,7 +69,7 @@ describe("admin verification queue", () => {
       .bind(await hashSecret("x"))
       .run();
 
-    const res = await SELF.fetch("https://example.com/admin/verifications/pending-3/reject", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications/pending-3/reject", {
       method: "POST",
       headers: { Cookie: `session=${adminToken}` },
     });
@@ -84,7 +84,7 @@ describe("admin verification queue", () => {
   it("returns 404 when approving a nonexistent user", async () => {
     const adminToken = await makeUser("admin-test-5", { isAdmin: true });
 
-    const res = await SELF.fetch("https://example.com/admin/verifications/does-not-exist/approve", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications/does-not-exist/approve", {
       method: "POST",
       headers: { Cookie: `session=${adminToken}` },
     });
@@ -96,7 +96,7 @@ describe("admin verification queue", () => {
   it("returns 404 when rejecting a nonexistent user", async () => {
     const adminToken = await makeUser("admin-test-6", { isAdmin: true });
 
-    const res = await SELF.fetch("https://example.com/admin/verifications/does-not-exist/reject", {
+    const res = await SELF.fetch("https://example.com/api/admin/verifications/does-not-exist/reject", {
       method: "POST",
       headers: { Cookie: `session=${adminToken}` },
     });

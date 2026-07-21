@@ -15,7 +15,7 @@ async function makeVerifiedUser(id: string) {
 
 async function makePost(token: string) {
   const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{ id: number }>();
-  const res = await SELF.fetch("https://example.com/posts", {
+  const res = await SELF.fetch("https://example.com/api/posts", {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
     body: JSON.stringify({ categoryId: category!.id, title: "T", body: "B" }),
@@ -30,7 +30,7 @@ describe("POST /votes", () => {
     const postId = await makePost(authorToken);
     const voterToken = await makeVerifiedUser("voter-1");
 
-    const res = await SELF.fetch("https://example.com/votes", {
+    const res = await SELF.fetch("https://example.com/api/votes", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${voterToken}` },
       body: JSON.stringify({ targetType: "post", targetId: postId, value: 1 }),
@@ -46,12 +46,12 @@ describe("POST /votes", () => {
     const postId = await makePost(authorToken);
     const voterToken = await makeVerifiedUser("voter-2");
 
-    await SELF.fetch("https://example.com/votes", {
+    await SELF.fetch("https://example.com/api/votes", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${voterToken}` },
       body: JSON.stringify({ targetType: "post", targetId: postId, value: 1 }),
     });
-    await SELF.fetch("https://example.com/votes", {
+    await SELF.fetch("https://example.com/api/votes", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${voterToken}` },
       body: JSON.stringify({ targetType: "post", targetId: postId, value: -1 }),
@@ -70,7 +70,7 @@ describe("POST /votes", () => {
 
   it("rejects an invalid value", async () => {
     const token = await makeVerifiedUser("voter-3");
-    const res = await SELF.fetch("https://example.com/votes", {
+    const res = await SELF.fetch("https://example.com/api/votes", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ targetType: "post", targetId: "whatever", value: 5 }),

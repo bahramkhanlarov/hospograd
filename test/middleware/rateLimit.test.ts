@@ -22,7 +22,7 @@ describe("post rate limiting", () => {
 
     const statuses: number[] = [];
     for (let i = 0; i < 6; i++) {
-      const res = await SELF.fetch("https://example.com/posts", {
+      const res = await SELF.fetch("https://example.com/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
         body: JSON.stringify({ categoryId: category!.id, title: `Post ${i}`, body: "body" }),

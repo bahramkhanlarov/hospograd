@@ -15,7 +15,7 @@ async function makeVerifiedUser(id: string) {
 
 async function makePost(token: string) {
   const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{ id: number }>();
-  const res = await SELF.fetch("https://example.com/posts", {
+  const res = await SELF.fetch("https://example.com/api/posts", {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
     body: JSON.stringify({ categoryId: category!.id, title: "T", body: "B" }),
@@ -29,7 +29,7 @@ describe("comments", () => {
     const token = await makeVerifiedUser("commenter-1");
     const postId = await makePost(token);
 
-    const topRes = await SELF.fetch(`https://example.com/posts/${postId}/comments`, {
+    const topRes = await SELF.fetch(`https://example.com/api/posts/${postId}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "Top level comment" }),
@@ -37,14 +37,14 @@ describe("comments", () => {
     expect(topRes.status).toBe(201);
     const { comment: topComment } = (await topRes.json()) as { comment: { id: string } };
 
-    const replyRes = await SELF.fetch(`https://example.com/posts/${postId}/comments`, {
+    const replyRes = await SELF.fetch(`https://example.com/api/posts/${postId}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "A reply", parentCommentId: topComment.id }),
     });
     expect(replyRes.status).toBe(201);
 
-    const listRes = await SELF.fetch(`https://example.com/posts/${postId}/comments`);
+    const listRes = await SELF.fetch(`https://example.com/api/posts/${postId}/comments`);
     const { comments } = (await listRes.json()) as {
       comments: { id: string; parent_comment_id: string | null; body: string }[];
     };
@@ -55,7 +55,7 @@ describe("comments", () => {
   it("rejects unauthenticated comment creation", async () => {
     const token = await makeVerifiedUser("commenter-2");
     const postId = await makePost(token);
-    const res = await SELF.fetch(`https://example.com/posts/${postId}/comments`, {
+    const res = await SELF.fetch(`https://example.com/api/posts/${postId}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ body: "no auth" }),
@@ -67,7 +67,7 @@ describe("comments", () => {
     const token = await makeVerifiedUser("commenter-3");
     const postId = await makePost(token);
 
-    const res = await SELF.fetch(`https://example.com/posts/${postId}/comments`, {
+    const res = await SELF.fetch(`https://example.com/api/posts/${postId}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "orphan reply", parentCommentId: "nonexistent-id" }),
@@ -82,14 +82,14 @@ describe("comments", () => {
     const postA = await makePost(token);
     const postB = await makePost(token);
 
-    const commentOnA = await SELF.fetch(`https://example.com/posts/${postA}/comments`, {
+    const commentOnA = await SELF.fetch(`https://example.com/api/posts/${postA}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "Comment on post A" }),
     });
     const { comment } = (await commentOnA.json()) as { comment: { id: string } };
 
-    const crossPostReply = await SELF.fetch(`https://example.com/posts/${postB}/comments`, {
+    const crossPostReply = await SELF.fetch(`https://example.com/api/posts/${postB}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "Cross-post reply", parentCommentId: comment.id }),

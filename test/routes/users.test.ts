@@ -19,19 +19,19 @@ describe("GET /users/:username", () => {
     const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{
       id: number;
     }>();
-    const postRes = await SELF.fetch("https://example.com/posts", {
+    const postRes = await SELF.fetch("https://example.com/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ categoryId: category!.id, title: "My post", body: "Body" }),
     });
     const { post } = (await postRes.json()) as { post: { id: string } };
-    await SELF.fetch(`https://example.com/posts/${post.id}/comments`, {
+    await SELF.fetch(`https://example.com/api/posts/${post.id}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ body: "My comment" }),
     });
 
-    const res = await SELF.fetch("https://example.com/users/profileuser-profile-1");
+    const res = await SELF.fetch("https://example.com/api/users/profileuser-profile-1");
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       user: { username: string; school: string; status: string; verification_state: string };
@@ -46,7 +46,7 @@ describe("GET /users/:username", () => {
   });
 
   it("returns 404 for a missing username", async () => {
-    const res = await SELF.fetch("https://example.com/users/does-not-exist");
+    const res = await SELF.fetch("https://example.com/api/users/does-not-exist");
     expect(res.status).toBe(404);
   });
 });

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 describe("POST /auth/login", () => {
   it("logs in with correct credentials and sets a session cookie", async () => {
-    await SELF.fetch("https://example.com/auth/signup", {
+    await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -15,7 +15,7 @@ describe("POST /auth/login", () => {
       }),
     });
 
-    const res = await SELF.fetch("https://example.com/auth/login", {
+    const res = await SELF.fetch("https://example.com/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "loginuser", password: "correct-password-1" }),
@@ -25,7 +25,7 @@ describe("POST /auth/login", () => {
   });
 
   it("rejects an incorrect password", async () => {
-    await SELF.fetch("https://example.com/auth/signup", {
+    await SELF.fetch("https://example.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -36,7 +36,7 @@ describe("POST /auth/login", () => {
         status: "student",
       }),
     });
-    const res = await SELF.fetch("https://example.com/auth/login", {
+    const res = await SELF.fetch("https://example.com/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "loginuser2", password: "wrong-password" }),

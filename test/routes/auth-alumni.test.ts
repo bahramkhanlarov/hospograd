@@ -2,7 +2,7 @@ import { SELF, env } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 
 async function signupAlumni(email: string) {
-  await SELF.fetch("https://example.com/auth/signup", {
+  await SELF.fetch("https://example.com/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -22,7 +22,7 @@ describe("POST /auth/alumni-verification", () => {
     form.set("email", "linkedin@glion.example");
     form.set("linkedinUrl", "https://linkedin.com/in/example");
 
-    const res = await SELF.fetch("https://example.com/auth/alumni-verification", {
+    const res = await SELF.fetch("https://example.com/api/auth/alumni-verification", {
       method: "POST",
       body: form,
     });
@@ -40,7 +40,7 @@ describe("POST /auth/alumni-verification", () => {
     form.set("email", "doc@glion.example");
     form.set("document", new File(["fake-diploma-bytes"], "diploma.png", { type: "image/png" }));
 
-    const res = await SELF.fetch("https://example.com/auth/alumni-verification", {
+    const res = await SELF.fetch("https://example.com/api/auth/alumni-verification", {
       method: "POST",
       body: form,
     });
@@ -66,7 +66,7 @@ describe("POST /auth/alumni-verification", () => {
     const form = new FormData();
     form.set("email", "empty@glion.example");
 
-    const res = await SELF.fetch("https://example.com/auth/alumni-verification", {
+    const res = await SELF.fetch("https://example.com/api/auth/alumni-verification", {
       method: "POST",
       body: form,
     });

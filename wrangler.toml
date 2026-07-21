@@ -18,3 +18,7 @@ bucket_name = "hospograd-uploads"
 #   (wrangler dev and vitest-pool-workers both load it automatically).
 # - Production: provide them via `wrangler secret put SESSION_SECRET` and
 #   `wrangler secret put RESEND_API_KEY` (see plan's "Post-Plan Manual Steps").
+
+[assets]
+directory = "./public"
+binding = "ASSETS"

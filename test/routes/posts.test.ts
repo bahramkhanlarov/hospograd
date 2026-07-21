@@ -20,7 +20,7 @@ describe("POST /posts", () => {
       id: number;
     }>();
 
-    const res = await SELF.fetch("https://example.com/posts", {
+    const res = await SELF.fetch("https://example.com/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ categoryId: category!.id, title: "Studio near campus?", body: "Any leads on studios?" }),
@@ -28,7 +28,7 @@ describe("POST /posts", () => {
     expect(res.status).toBe(201);
     const body = (await res.json()) as { post: { id: string } };
 
-    const feedRes = await SELF.fetch("https://example.com/categories/accommodation/posts");
+    const feedRes = await SELF.fetch("https://example.com/api/categories/accommodation/posts");
     const feed = (await feedRes.json()) as { posts: { id: string; username: string; school: string }[] };
     const created = feed.posts.find((p) => p.id === body.post.id);
     expect(created?.username).toBe("user-post-author-1");
@@ -39,7 +39,7 @@ describe("POST /posts", () => {
     const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'accommodation'").first<{
       id: number;
     }>();
-    const res = await SELF.fetch("https://example.com/posts", {
+    const res = await SELF.fetch("https://example.com/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ categoryId: category!.id, title: "x", body: "y" }),
@@ -52,14 +52,14 @@ describe("GET /posts/:id", () => {
   it("returns a single post with author badge info", async () => {
     const token = await makeVerifiedUser("post-author-2");
     const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{ id: number }>();
-    const createRes = await SELF.fetch("https://example.com/posts", {
+    const createRes = await SELF.fetch("https://example.com/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
       body: JSON.stringify({ categoryId: category!.id, title: "Hello", body: "World" }),
     });
     const { post } = (await createRes.json()) as { post: { id: string } };
 
-    const res = await SELF.fetch(`https://example.com/posts/${post.id}`);
+    const res = await SELF.fetch(`https://example.com/api/posts/${post.id}`);
     expect(res.status).toBe(200);
     const body = (await res.json()) as { post: { title: string; username: string } };
     expect(body.post.title).toBe("Hello");
@@ -67,7 +67,7 @@ describe("GET /posts/:id", () => {
   });
 
   it("returns 404 for a missing post", async () => {
-    const res = await SELF.fetch("https://example.com/posts/does-not-exist");
+    const res = await SELF.fetch("https://example.com/api/posts/does-not-exist");
     expect(res.status).toBe(404);
   });
 });
