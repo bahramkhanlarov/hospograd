@@ -2,10 +2,11 @@ import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { requireVerified } from "../middleware/auth";
 import { newId } from "../lib/id";
+import { rateLimitPosts } from "../middleware/rateLimit";
 
 export const posts = new Hono<{ Bindings: Bindings; Variables: { userId: string; isAdmin: boolean } }>();
 
-posts.post("/", requireVerified, async (c) => {
+posts.post("/", requireVerified, rateLimitPosts, async (c) => {
   const { categoryId, title, body, imageKeys } = await c.req.json<{
     categoryId: number;
     title: string;

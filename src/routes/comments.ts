@@ -2,10 +2,11 @@ import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { requireVerified } from "../middleware/auth";
 import { newId } from "../lib/id";
+import { rateLimitComments } from "../middleware/rateLimit";
 
 export const comments = new Hono<{ Bindings: Bindings; Variables: { userId: string; isAdmin: boolean } }>();
 
-comments.post("/:postId/comments", requireVerified, async (c) => {
+comments.post("/:postId/comments", requireVerified, rateLimitComments, async (c) => {
   const postId = c.req.param("postId");
   const { body, parentCommentId } = await c.req.json<{ body: string; parentCommentId?: string }>();
 

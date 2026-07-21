@@ -41,3 +41,10 @@ admin.post("/verifications/:userId/reject", async (c) => {
   }
   return c.json({ message: "Rejected" });
 });
+
+admin.get("/reports", async (c) => {
+  const { results } = await c.env.DB.prepare(
+    "SELECT id, reporter_id, target_type, target_id, reason, created_at FROM reports WHERE status = 'open' ORDER BY created_at ASC"
+  ).all();
+  return c.json({ reports: results });
+});
