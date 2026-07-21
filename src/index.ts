@@ -6,6 +6,7 @@ import { posts } from "./routes/posts";
 import { comments } from "./routes/comments";
 import { votes } from "./routes/votes";
 import { reports } from "./routes/reports";
+import { users } from "./routes/users";
 
 export type Bindings = {
   DB: D1Database;
@@ -24,5 +25,6 @@ app.route("/posts", posts);
 app.route("/posts", comments);
 app.route("/votes", votes);
 app.route("/reports", reports);
+app.route("/users", users);
 
 export default app;
