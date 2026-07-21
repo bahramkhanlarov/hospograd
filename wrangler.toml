@@ -11,3 +11,8 @@ migrations_dir = "migrations"
 [[r2_buckets]]
 binding = "UPLOADS"
 bucket_name = "hospograd-uploads"
+
+[vars]
+# Local/test default only. Production overrides this via `wrangler secret put SESSION_SECRET`,
+# which takes precedence over [vars] at deploy time.
+SESSION_SECRET = "dev-only-session-secret-replace-in-production"

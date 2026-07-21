@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { hashSecret, verifySecret } from "../lib/crypto";
 import { newId } from "../lib/id";
+import { createSessionToken } from "../lib/session";
 
 export const auth = new Hono<{ Bindings: Bindings }>();
 
@@ -194,4 +195,22 @@ auth.post("/alumni-verification", async (c) => {
   await c.env.DB.prepare("UPDATE users SET verification_doc_key = ? WHERE id = ?").bind(docKey, user.id).run();
 
   return c.json({ message: "Submitted for review" });
+});
+
+auth.post("/login", async (c) => {
+  const { username, password } = await c.req.json<{ username: string; password: string }>();
+  const user = await c.env.DB.prepare("SELECT id, password_hash FROM users WHERE username = ?")
+    .bind(username)
+    .first<{ id: string; password_hash: string }>();
+
+  if (!user || !(await verifySecret(password, user.password_hash))) {
+    return c.json({ error: "Invalid username or password" }, 401);
+  }
+
+  const token = await createSessionToken(user.id, c.env.SESSION_SECRET);
+  c.header(
+    "Set-Cookie",
+    `session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`
+  );
+  return c.json({ message: "Logged in" });
 });
