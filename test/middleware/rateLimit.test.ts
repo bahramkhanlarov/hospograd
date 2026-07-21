@@ -20,15 +20,17 @@ describe("post rate limiting", () => {
       id: number;
     }>();
 
-    let lastStatus = 0;
+    const statuses: number[] = [];
     for (let i = 0; i < 6; i++) {
       const res = await SELF.fetch("https://example.com/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
         body: JSON.stringify({ categoryId: category!.id, title: `Post ${i}`, body: "body" }),
       });
-      lastStatus = res.status;
+      statuses.push(res.status);
     }
-    expect(lastStatus).toBe(429);
+
+    expect(statuses.slice(0, 5)).toEqual([201, 201, 201, 201, 201]);
+    expect(statuses[5]).toBe(429);
   });
 });
