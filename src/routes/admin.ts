@@ -22,12 +22,22 @@ admin.get("/verifications", async (c) => {
 
 admin.post("/verifications/:userId/approve", async (c) => {
   const userId = c.req.param("userId");
-  await c.env.DB.prepare("UPDATE users SET verification_state = 'verified' WHERE id = ?").bind(userId).run();
+  const result = await c.env.DB.prepare("UPDATE users SET verification_state = 'verified' WHERE id = ?")
+    .bind(userId)
+    .run();
+  if (result.meta.changes === 0) {
+    return c.json({ error: "User not found" }, 404);
+  }
   return c.json({ message: "Approved" });
 });
 
 admin.post("/verifications/:userId/reject", async (c) => {
   const userId = c.req.param("userId");
-  await c.env.DB.prepare("UPDATE users SET verification_state = 'rejected' WHERE id = ?").bind(userId).run();
+  const result = await c.env.DB.prepare("UPDATE users SET verification_state = 'rejected' WHERE id = ?")
+    .bind(userId)
+    .run();
+  if (result.meta.changes === 0) {
+    return c.json({ error: "User not found" }, 404);
+  }
   return c.json({ message: "Rejected" });
 });

@@ -59,4 +59,49 @@ describe("admin verification queue", () => {
       .first<{ verification_state: string }>();
     expect(row?.verification_state).toBe("verified");
   });
+
+  it("rejects a pending user", async () => {
+    const adminToken = await makeUser("admin-test-4", { isAdmin: true });
+    await env.DB.prepare(
+      `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, created_at)
+       VALUES ('pending-3', 'pendinguser3', 'pending3@glion.ch', ?, 'Glion', 'alumni', 'pending', 0)`
+    )
+      .bind(await hashSecret("x"))
+      .run();
+
+    const res = await SELF.fetch("https://example.com/admin/verifications/pending-3/reject", {
+      method: "POST",
+      headers: { Cookie: `session=${adminToken}` },
+    });
+    expect(res.status).toBe(200);
+
+    const row = await env.DB.prepare("SELECT verification_state FROM users WHERE id = ?")
+      .bind("pending-3")
+      .first<{ verification_state: string }>();
+    expect(row?.verification_state).toBe("rejected");
+  });
+
+  it("returns 404 when approving a nonexistent user", async () => {
+    const adminToken = await makeUser("admin-test-5", { isAdmin: true });
+
+    const res = await SELF.fetch("https://example.com/admin/verifications/does-not-exist/approve", {
+      method: "POST",
+      headers: { Cookie: `session=${adminToken}` },
+    });
+    expect(res.status).toBe(404);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toBe("User not found");
+  });
+
+  it("returns 404 when rejecting a nonexistent user", async () => {
+    const adminToken = await makeUser("admin-test-6", { isAdmin: true });
+
+    const res = await SELF.fetch("https://example.com/admin/verifications/does-not-exist/reject", {
+      method: "POST",
+      headers: { Cookie: `session=${adminToken}` },
+    });
+    expect(res.status).toBe(404);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toBe("User not found");
+  });
 });
