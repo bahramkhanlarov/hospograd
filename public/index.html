@@ -3,8 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <title>HospoGrad</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <p>HospoGrad frontend under construction.</p>
+    <nav class="nav" id="site-nav"></nav>
+    <div class="layout">
+      <aside class="sidebar" id="category-sidebar"></aside>
+      <main class="main">
+        <div>
+          <a href="?sort=new" class="btn-secondary btn" id="sort-new">New</a>
+          <a href="?sort=top" class="btn-secondary btn" id="sort-top">Top</a>
+        </div>
+        <div id="post-list"></div>
+      </main>
+    </div>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/home.js"></script>
   </body>
 </html>
