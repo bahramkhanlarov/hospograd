@@ -4,6 +4,7 @@ import { admin } from "./routes/admin";
 import { categories } from "./routes/categories";
 import { posts } from "./routes/posts";
 import { comments } from "./routes/comments";
+import { votes } from "./routes/votes";
 
 export type Bindings = {
   DB: D1Database;
@@ -20,5 +21,6 @@ app.route("/admin", admin);
 app.route("/categories", categories);
 app.route("/posts", posts);
 app.route("/posts", comments);
+app.route("/votes", votes);
 
 export default app;
