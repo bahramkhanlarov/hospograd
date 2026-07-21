@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Verify your alumni status · HospoGrad</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <nav class="nav" id="site-nav"></nav>
+    <div class="form-card">
+      <h2>Verify your alumni status</h2>
+      <p>Submit a LinkedIn profile URL or upload proof (diploma photo, alumni card).</p>
+      <form id="alumni-form">
+        <div class="form-field">
+          <label for="linkedinUrl">LinkedIn URL (optional if uploading a document)</label>
+          <input type="url" id="linkedinUrl" />
+        </div>
+        <div class="form-field">
+          <label for="document">Document (optional if providing a LinkedIn URL)</label>
+          <input type="file" id="document" />
+        </div>
+        <p class="error-message" id="error" hidden></p>
+        <button type="submit" class="btn">Submit for review</button>
+      </form>
+    </div>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/alumni-verify.js"></script>
+  </body>
+</html>

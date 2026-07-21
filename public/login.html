@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Log in · HospoGrad</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <nav class="nav" id="site-nav"></nav>
+    <div class="form-card">
+      <h2>Log in</h2>
+      <form id="login-form">
+        <div class="form-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" required />
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required />
+        </div>
+        <p class="error-message" id="error" hidden></p>
+        <button type="submit" class="btn">Log in</button>
+      </form>
+      <p>New here? <a href="/signup.html">Sign up</a></p>
+    </div>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/login.js"></script>
+  </body>
+</html>

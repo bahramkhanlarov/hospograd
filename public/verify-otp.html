@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Verify your email · HospoGrad</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <nav class="nav" id="site-nav"></nav>
+    <div class="form-card">
+      <h2>Check your email</h2>
+      <p>Enter the 6-digit code we sent you.</p>
+      <form id="verify-form">
+        <div class="form-field">
+          <label for="code">Verification code</label>
+          <input type="text" id="code" required maxlength="6" pattern="[0-9]{6}" />
+        </div>
+        <p class="error-message" id="error" hidden></p>
+        <button type="submit" class="btn">Verify</button>
+      </form>
+    </div>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/verify-otp.js"></script>
+  </body>
+</html>
