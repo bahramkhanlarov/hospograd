@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Post · HospoGrad</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <nav class="nav" id="site-nav"></nav>
+    <div class="layout">
+      <main class="main" style="flex: 1 1 100%;">
+        <div id="post-detail"></div>
+        <hr />
+        <h3>Comments</h3>
+        <form id="comment-form">
+          <div class="form-field">
+            <textarea id="comment-body" placeholder="Add a comment" required></textarea>
+          </div>
+          <p class="error-message" id="comment-error" hidden></p>
+          <button type="submit" class="btn">Comment</button>
+        </form>
+        <div id="comment-list"></div>
+      </main>
+    </div>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/post.js"></script>
+  </body>
+</html>
