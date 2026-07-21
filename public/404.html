@@ -3,34 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Submit proof of alumni status for HospoGrad verification." />
+    <meta name="description" content="Page not found on HospoGrad." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2430'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' fill='%23c9975a' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Verify your alumni status · HospoGrad</title>
+    <title>Page not found · HospoGrad</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      .not-found {
+        max-width: 480px;
+        margin: 6rem auto;
+        text-align: center;
+        padding: 0 1.25rem;
+      }
+      .not-found .code {
+        font-family: var(--font-display);
+        font-size: 4.5rem;
+        font-weight: 700;
+        color: var(--color-accent);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+      .not-found p {
+        color: var(--color-text-muted);
+        margin-bottom: 1.5rem;
+      }
+    </style>
   </head>
   <body>
     <nav class="nav" id="site-nav"></nav>
-    <div class="form-card">
-      <h2>Verify your alumni status</h2>
-      <p>Submit a LinkedIn profile URL or upload proof (diploma photo, alumni card).</p>
-      <form id="alumni-form">
-        <div class="form-field">
-          <label for="linkedinUrl">LinkedIn URL (optional if uploading a document)</label>
-          <input type="url" id="linkedinUrl" />
-        </div>
-        <div class="form-field">
-          <label for="document">Document (optional if providing a LinkedIn URL)</label>
-          <input type="file" id="document" />
-        </div>
-        <p class="error-message" id="error" hidden></p>
-        <button type="submit" class="btn">Submit for review</button>
-      </form>
+    <div class="not-found">
+      <div class="code">404</div>
+      <h1>This page doesn't exist</h1>
+      <p>The link might be broken, or the page may have moved.</p>
+      <a class="btn" href="/index.html">Back to the feed</a>
     </div>
     <script src="/js/api.js"></script>
     <script src="/js/layout.js"></script>
-    <script src="/js/alumni-verify.js"></script>
+    <script>
+      initNav();
+    </script>
   </body>
 </html>
