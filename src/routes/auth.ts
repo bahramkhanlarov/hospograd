@@ -159,3 +159,39 @@ auth.post("/verify-otp", async (c) => {
 
   return c.json({ message: "Verified" });
 });
+
+auth.post("/alumni-verification", async (c) => {
+  const form = await c.req.formData();
+  const email = form.get("email");
+  const linkedinUrl = form.get("linkedinUrl");
+  const document = form.get("document");
+
+  if (typeof email !== "string") {
+    return c.json({ error: "email is required" }, 400);
+  }
+  if (typeof linkedinUrl !== "string" && !(document instanceof File)) {
+    return c.json({ error: "Provide a linkedinUrl or a document" }, 400);
+  }
+
+  const user = await c.env.DB.prepare("SELECT id FROM users WHERE email = ? AND status = 'alumni'")
+    .bind(email)
+    .first<{ id: string }>();
+  if (!user) {
+    return c.json({ error: "No pending alumni account for this email" }, 404);
+  }
+
+  let docKey: string;
+  if (document instanceof File) {
+    docKey = `verification/${user.id}/${newId()}-${document.name}`;
+    await c.env.UPLOADS.put(docKey, await document.arrayBuffer(), {
+      httpMetadata: { contentType: document.type },
+    });
+  } else {
+    docKey = `verification/${user.id}/linkedin.txt`;
+    await c.env.UPLOADS.put(docKey, linkedinUrl as string);
+  }
+
+  await c.env.DB.prepare("UPDATE users SET verification_doc_key = ? WHERE id = ?").bind(docKey, user.id).run();
+
+  return c.json({ message: "Submitted for review" });
+});
