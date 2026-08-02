@@ -4,7 +4,15 @@ import type { Bindings } from "../index";
 export const categories = new Hono<{ Bindings: Bindings }>();
 
 categories.get("/", async (c) => {
-  const { results } = await c.env.DB.prepare("SELECT id, slug, name, description FROM categories ORDER BY id").all();
+  const { results } = await c.env.DB.prepare(
+    `SELECT c.id, c.slug, c.name, c.description,
+            COUNT(p.id) AS post_count,
+            MAX(p.created_at) AS last_post_at
+     FROM categories c
+     LEFT JOIN posts p ON p.category_id = c.id
+     GROUP BY c.id
+     ORDER BY c.id`
+  ).all();
   return c.json({ categories: results });
 });
 
