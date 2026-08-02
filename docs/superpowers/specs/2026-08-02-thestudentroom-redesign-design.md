@@ -14,6 +14,10 @@ In scope:
 - `public/post.html` + `public/js/post.js` — byline-under-title OP, comments as bordered
   rows with left author rail
 - `src/routes/categories.ts` — add `post_count` and `last_post_at` via aggregate query
+- `src/routes/posts.ts` — add `comment_count` to `GET /` and reuse the same
+  aggregate pattern for `GET /api/categories/:slug/posts` in `categories.ts`
+  (needed for the "Replies" column in both the homepage post list and the
+  category thread-row table)
 - All HTML files — remove Google Fonts (Fraunces/Outfit) `<link>` tags; drop to
   system font stack
 
@@ -100,14 +104,39 @@ GROUP BY c.id
 ORDER BY c.id
 ```
 
-`GET /api/categories/:slug/posts` is unchanged.
+`GET /api/categories/:slug/posts` gains a `comment_count` column via the same
+join pattern used in `posts.ts` below.
+
+## Backend: `src/routes/posts.ts`
+
+Both `GET /` and the query backing `GET /api/categories/:slug/posts` need a
+per-post comment count for the "Replies" column. Add a `LEFT JOIN` against
+`comments` grouped by post, e.g. for `GET /`:
+
+```sql
+SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at, p.category_id,
+       u.username, u.school, u.status,
+       COUNT(cm.id) AS comment_count
+FROM posts p
+JOIN users u ON u.id = p.author_id
+LEFT JOIN comments cm ON cm.post_id = p.id
+GROUP BY p.id
+ORDER BY ${sort}
+```
+
+The same `LEFT JOIN comments ... GROUP BY p.id` addition applies to the
+`categories.ts` posts-by-slug query. `GET /:id` (single post) does not need
+`comment_count` — the thread page already renders the full comment list.
 
 ## Testing
 
 - Existing test suite (`test/`) covers route behavior; the categories query
   change needs a test asserting `post_count`/`last_post_at` appear correctly
   (including the zero-posts case) in the `GET /api/categories` response.
-- No new routes, so no new route tests beyond that assertion update.
+- `posts.ts` query change needs a test asserting `comment_count` appears
+  correctly (including the zero-comments case) in both `GET /api/posts` and
+  `GET /api/categories/:slug/posts` responses.
+- No new routes, so no new route tests beyond those assertion updates.
 - Manual verification: load index/category/post pages in a browser and confirm
   layout renders correctly with real seeded data, including zero-post and
   zero-comment states.
