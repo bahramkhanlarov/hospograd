@@ -3,6 +3,15 @@ initNav();
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("id");
 
+function initials(username) {
+  return (username || "?").slice(0, 2).toUpperCase();
+}
+
+function formatTimestamp(ms) {
+  if (!ms) return "—";
+  return new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
 async function vote(targetType, targetId, value) {
   try {
     await apiPost("/api/votes", { targetType, targetId, value });
@@ -16,6 +25,7 @@ async function vote(targetType, targetId, value) {
 async function loadPost() {
   const data = await apiGet("/api/posts/" + encodeURIComponent(postId));
   const p = data.post;
+  renderBreadcrumb([{ label: "Home", href: "/index.html" }, { label: p.title }]);
   document.getElementById("post-detail").innerHTML =
     '<div class="post-card">' +
     '<div class="vote-controls">' +
@@ -25,8 +35,8 @@ async function loadPost() {
     "</div>" +
     "<div>" +
     "<h2>" + escapeHtml(p.title) + "</h2>" +
+    '<div class="meta">u/' + escapeHtml(p.username) + " &middot; " + escapeHtml(p.school) + " &middot; " + escapeHtml(p.status) + " &middot; " + formatTimestamp(p.created_at) + "</div>" +
     "<p>" + escapeHtml(p.body) + "</p>" +
-    '<div class="meta"><span class="badge">u/' + escapeHtml(p.username) + " &middot; " + escapeHtml(p.school) + " &middot; " + escapeHtml(p.status) + "</span></div>" +
     "</div>" +
     "</div>";
   document.getElementById("upvote").addEventListener("click", () => vote("post", postId, 1));
@@ -50,10 +60,17 @@ function buildCommentTree(comments) {
 function renderComment(c) {
   const childrenHtml = c.children.map(renderComment).join("");
   return (
-    '<div class="post-card" style="margin-left: 0;">' +
-    "<div><p>" + escapeHtml(c.body) + "</p>" +
-    '<div class="meta"><span class="badge">u/' + escapeHtml(c.username) + " &middot; " + escapeHtml(c.school) + "</span></div>" +
-    '<div style="margin-left: 1.5rem;">' + childrenHtml + "</div>" +
+    '<div class="comment-row">' +
+    '<div class="comment-rail">' +
+    '<div class="avatar-placeholder">' + escapeHtml(initials(c.username)) + "</div>" +
+    '<div class="comment-username">u/' + escapeHtml(c.username) + "</div>" +
+    "<div>" + escapeHtml(c.school) + "</div>" +
+    "<div>" + escapeHtml(c.status) + "</div>" +
+    "</div>" +
+    '<div class="comment-body">' +
+    "<p>" + escapeHtml(c.body) + "</p>" +
+    '<div class="meta">' + formatTimestamp(c.created_at) + "</div>" +
+    '<div style="margin-left: 1.25rem;">' + childrenHtml + "</div>" +
     "</div>" +
     "</div>"
   );
