@@ -29,9 +29,13 @@ categories.get("/:slug/posts", async (c) => {
 
   const { results } = await c.env.DB.prepare(
     `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at,
-            u.username, u.school, u.status
-     FROM posts p JOIN users u ON u.id = p.author_id
+            u.username, u.school, u.status,
+            COUNT(cm.id) AS comment_count
+     FROM posts p
+     JOIN users u ON u.id = p.author_id
+     LEFT JOIN comments cm ON cm.post_id = p.id
      WHERE p.category_id = ?
+     GROUP BY p.id
      ORDER BY ${sort}`
   )
     .bind(category.id)

@@ -55,3 +55,33 @@ describe("GET /categories", () => {
     expect(accommodation?.last_post_at).not.toBeNull();
   });
 });
+
+describe("GET /categories/:slug/posts", () => {
+  it("includes comment_count per post", async () => {
+    await env.DB.prepare(
+      `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, created_at)
+       VALUES (?, ?, ?, ?, 'EHL', 'student', 'verified', 0)`
+    )
+      .bind("slug-count-user", "slug-count-user", "slug-count-user@ehl.ch", await hashSecret("x"))
+      .run();
+    const token = await createSessionToken("slug-count-user", env.SESSION_SECRET);
+    const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'jobs-internships'").first<{ id: number }>();
+
+    const postRes = await SELF.fetch("https://example.com/api/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ categoryId: category!.id, title: "Job post", body: "b" }),
+    });
+    const { post } = (await postRes.json()) as { post: { id: string } };
+    await SELF.fetch(`https://example.com/api/posts/${post.id}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "one comment" }),
+    });
+
+    const res = await SELF.fetch("https://example.com/api/categories/jobs-internships/posts");
+    const body = (await res.json()) as { posts: { title: string; comment_count: number }[] };
+    const found = body.posts.find((p) => p.title === "Job post");
+    expect(found?.comment_count).toBe(1);
+  });
+});
