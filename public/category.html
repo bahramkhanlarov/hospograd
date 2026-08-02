@@ -5,20 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Browse HospoGrad discussions by category." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c2430'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' fill='%23c9975a' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Category · HospoGrad</title>
+    <title>Category &middot; HospoGrad</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <nav class="nav" id="site-nav"></nav>
+    <div class="header-strip-breadcrumb" id="breadcrumb-strip"></div>
     <div class="layout">
-      <aside class="sidebar" id="category-sidebar"></aside>
-      <main class="main">
-        <h2 id="category-name"></h2>
-        <p id="category-description" class="meta"></p>
-        <div id="post-list"></div>
+      <main class="main" style="flex: 1 1 100%;">
+        <table class="thread-table" id="post-list"></table>
       </main>
     </div>
     <script src="/js/api.js"></script>

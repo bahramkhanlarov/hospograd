@@ -3,37 +3,43 @@ initNav();
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 
-renderSidebar(slug);
+function formatTimestamp(ms) {
+  if (!ms) return "—";
+  return new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
 
 function renderPostList(posts) {
-  const list = document.getElementById("post-list");
+  const table = document.getElementById("post-list");
   if (posts.length === 0) {
-    list.innerHTML = "<p>No posts in this category yet.</p>";
+    table.innerHTML = "<tbody><tr><td>No posts in this category yet.</td></tr></tbody>";
     return;
   }
-  list.innerHTML = posts
+  const rows = posts
     .map(
       (p) =>
-        '<div class="post-card">' +
-        '<div class="vote-controls"><span class="score">' + p.score + "</span></div>" +
-        "<div>" +
-        '<h3><a href="/post.html?id=' + encodeURIComponent(p.id) + '">' + escapeHtml(p.title) + "</a></h3>" +
-        '<div class="meta">' +
-        '<span class="badge">u/' + escapeHtml(p.username) + " &middot; " + escapeHtml(p.school) + " &middot; " + escapeHtml(p.status) + "</span>" +
-        "</div>" +
-        "</div>" +
-        "</div>"
+        "<tr>" +
+        '<td class="thread-title">' +
+        '<a href="/post.html?id=' + encodeURIComponent(p.id) + '">' + escapeHtml(p.title) + "</a>" +
+        '<div class="thread-byline">u/' + escapeHtml(p.username) + " &middot; " + escapeHtml(p.school) + " &middot; " + escapeHtml(p.status) + "</div>" +
+        "</td>" +
+        '<td class="num-col">' + p.comment_count + "</td>" +
+        '<td class="num-col">' + p.score + "</td>" +
+        '<td class="num-col">' + formatTimestamp(p.created_at) + "</td>" +
+        "</tr>"
     )
     .join("");
+  table.innerHTML =
+    "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Last activity</th></tr></thead>" +
+    "<tbody>" + rows + "</tbody>";
 }
 
 async function loadCategory() {
   const catData = await apiGet("/api/categories");
   const category = catData.categories.find((c) => c.slug === slug);
-  if (category) {
-    document.getElementById("category-name").textContent = category.name;
-    document.getElementById("category-description").textContent = category.description;
-  }
+  renderBreadcrumb([
+    { label: "Home", href: "/index.html" },
+    { label: category ? category.name : slug },
+  ]);
   const feedData = await apiGet("/api/categories/" + encodeURIComponent(slug) + "/posts");
   renderPostList(feedData.posts);
 }
