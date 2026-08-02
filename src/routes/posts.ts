@@ -33,8 +33,12 @@ posts.get("/", async (c) => {
   const sort = c.req.query("sort") === "top" ? "p.score DESC" : "p.created_at DESC";
   const { results } = await c.env.DB.prepare(
     `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at, p.category_id,
-            u.username, u.school, u.status
-     FROM posts p JOIN users u ON u.id = p.author_id
+            u.username, u.school, u.status,
+            COALESCE(COUNT(cm.id), 0) AS comment_count
+     FROM posts p
+     JOIN users u ON u.id = p.author_id
+     LEFT JOIN comments cm ON cm.post_id = p.id
+     GROUP BY p.id, p.title, p.body, p.image_keys, p.score, p.created_at, p.category_id, u.username, u.school, u.status
      ORDER BY ${sort}`
   ).all();
   return c.json({ posts: results });

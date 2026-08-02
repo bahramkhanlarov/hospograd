@@ -103,4 +103,50 @@ describe("GET /posts (combined feed)", () => {
     const res = await SELF.fetch("https://example.com/api/posts?sort=top");
     expect(res.status).toBe(200);
   });
+
+  it("includes comment_count, 0 for posts with no comments", async () => {
+    const token = await makeVerifiedUser("no-comments-author");
+    const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{
+      id: number;
+    }>();
+    await SELF.fetch("https://example.com/api/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ categoryId: category!.id, title: "No comments post", body: "b" }),
+    });
+
+    const res = await SELF.fetch("https://example.com/api/posts");
+    const body = (await res.json()) as { posts: { title: string; comment_count: number }[] };
+    const noComments = body.posts.find((p) => p.title === "No comments post");
+    expect(noComments?.comment_count).toBe(0);
+  });
+
+  it("counts comments accurately", async () => {
+    const token = await makeVerifiedUser("comment-count-author");
+    const category = await env.DB.prepare("SELECT id FROM categories WHERE slug = 'general'").first<{
+      id: number;
+    }>();
+    const postRes = await SELF.fetch("https://example.com/api/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ categoryId: category!.id, title: "Counted post", body: "b" }),
+    });
+    const { post } = (await postRes.json()) as { post: { id: string } };
+
+    await SELF.fetch(`https://example.com/api/posts/${post.id}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "c1" }),
+    });
+    await SELF.fetch(`https://example.com/api/posts/${post.id}/comments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: `session=${token}` },
+      body: JSON.stringify({ body: "c2" }),
+    });
+
+    const res = await SELF.fetch("https://example.com/api/posts");
+    const body = (await res.json()) as { posts: { title: string; comment_count: number }[] };
+    const counted = body.posts.find((p) => p.title === "Counted post");
+    expect(counted?.comment_count).toBe(2);
+  });
 });
