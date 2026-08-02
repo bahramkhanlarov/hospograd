@@ -25,6 +25,23 @@ async function initNav() {
   }
 }
 
+function renderBreadcrumb(items) {
+  const strip = document.getElementById("breadcrumb-strip");
+  if (!strip) return;
+  const trail = items
+    .map((item, i) => {
+      const isLast = i === items.length - 1;
+      if (isLast || !item.href) {
+        return '<span class="current">' + escapeHtml(item.label) + "</span>";
+      }
+      return '<a href="' + item.href + '">' + escapeHtml(item.label) + "</a>";
+    })
+    .join(" <span>&rsaquo;</span> ");
+  strip.innerHTML =
+    '<div class="breadcrumb">' + trail + "</div>" +
+    '<input class="search-input" type="text" placeholder="Search HospoGrad" disabled />';
+}
+
 async function renderSidebar(activeSlug) {
   const sidebar = document.getElementById("category-sidebar");
   if (!sidebar) return;
