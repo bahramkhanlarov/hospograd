@@ -4,6 +4,10 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 async function apiRequest(method, path, body, isForm) {
   const opts = { method, credentials: "same-origin" };
   if (body !== undefined) {

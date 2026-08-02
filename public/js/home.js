@@ -22,7 +22,7 @@ function renderForumIndex(categories) {
     )
     .join("");
   table.innerHTML =
-    "<thead><tr><th>Category</th><th class=\"num-col\">Threads</th><th class=\"num-col\">Last activity</th></tr></thead>" +
+    "<thead><tr><th>Category</th><th class=\"num-col\">Threads</th><th class=\"num-col\">Latest thread</th></tr></thead>" +
     "<tbody>" + rows + "</tbody>";
 }
 
@@ -47,7 +47,7 @@ function renderPostList(posts) {
     )
     .join("");
   table.innerHTML =
-    "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Last activity</th></tr></thead>" +
+    "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Started</th></tr></thead>" +
     "<tbody>" + rows + "</tbody>";
 }
 

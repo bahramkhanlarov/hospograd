@@ -29,7 +29,7 @@ function renderPostList(posts) {
     )
     .join("");
   table.innerHTML =
-    "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Last activity</th></tr></thead>" +
+    "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Started</th></tr></thead>" +
     "<tbody>" + rows + "</tbody>";
 }
 

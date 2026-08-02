@@ -34,7 +34,7 @@ function renderBreadcrumb(items) {
       if (isLast || !item.href) {
         return '<span class="current">' + escapeHtml(item.label) + "</span>";
       }
-      return '<a href="' + escapeHtml(item.href) + '">' + escapeHtml(item.label) + "</a>";
+      return '<a href="' + escapeAttr(item.href) + '">' + escapeHtml(item.label) + "</a>";
     })
     .join(" <span>&rsaquo;</span> ");
   strip.innerHTML =
