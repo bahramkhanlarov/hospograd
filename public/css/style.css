@@ -302,6 +302,12 @@ h1, h2, h3 {
   color: var(--color-text);
 }
 .btn-secondary:hover { background: var(--color-accent-soft); border-color: var(--color-accent); }
+.btn-secondary.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+.btn-secondary.active:hover { background: var(--color-accent-hover); }
 
 .badge {
   display: inline-block;
