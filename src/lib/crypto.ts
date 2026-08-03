@@ -7,7 +7,11 @@ async function deriveBits(secret: string, salt: Uint8Array): Promise<Uint8Array>
     "deriveBits",
   ]);
   const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
+    // Cast is type-only: under TS's dom lib, WebCrypto's BufferSource requires
+    // Uint8Array<ArrayBuffer> specifically, while this function's public
+    // signature intentionally keeps the broader Uint8Array (ArrayBufferLike)
+    // for caller convenience. No behavior change at runtime.
+    { name: "PBKDF2", salt: salt as Uint8Array<ArrayBuffer>, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
     keyMaterial,
     256
   );
