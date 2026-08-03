@@ -14,30 +14,30 @@
 }
 
 :root {
-  --color-bg: #f0f2f4;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f7f9fa;
-  --color-text: #1a1a1a;
-  --color-text-muted: #6b7378;
-  --color-border: #d5dadf;
-  --color-nav-bg: #1e3a5f;
-  --color-nav-bg-deep: #14283f;
+  --color-bg: #0f1720;
+  --color-surface: #171f2b;
+  --color-surface-hover: #1c2532;
+  --color-text: #e8ecf0;
+  --color-text-muted: #8b95a3;
+  --color-border: #2a3441;
+  --color-nav-bg: #12202e;
+  --color-nav-bg-deep: #0a1219;
   --color-nav-text: #ffffff;
-  --color-accent: #0b8a6c;
-  --color-accent-hover: #096e56;
-  --color-accent-soft: rgba(11, 138, 108, 0.1);
-  --color-accent-soft-strong: rgba(11, 138, 108, 0.2);
-  --color-link: #0060a8;
-  --color-danger: #b3452c;
-  --color-danger-soft: rgba(179, 69, 44, 0.08);
+  --color-accent: #14b892;
+  --color-accent-hover: #0f9878;
+  --color-accent-soft: rgba(20, 184, 146, 0.15);
+  --color-accent-soft-strong: rgba(20, 184, 146, 0.28);
+  --color-link: #5eb3ff;
+  --color-danger: #e2694a;
+  --color-danger-soft: rgba(226, 105, 74, 0.15);
 
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
 
-  --shadow-sm: 0 1px 2px rgba(20, 26, 36, 0.06), 0 1px 1px rgba(20, 26, 36, 0.04);
-  --shadow-md: 0 10px 24px -10px rgba(20, 26, 36, 0.2), 0 2px 6px rgba(20, 26, 36, 0.06);
-  --shadow-accent: 0 8px 18px -6px rgba(11, 138, 108, 0.35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 24px -10px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-accent: 0 8px 18px -6px rgba(20, 184, 146, 0.45);
 
   --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
@@ -463,14 +463,9 @@ h3 { font-size: 1.2rem; }
   height: 28px;
   width: auto;
   object-fit: contain;
-  filter: grayscale(0.5) opacity(0.85);
-  transition: filter 0.15s ease;
-}
-/* Grayscale-to-color reveal only where hover exists; touch devices keep the
-   more legible default state above instead of a permanently faded logo. */
-@media (hover: hover) {
-  .school-banner-logos img { filter: grayscale(1) opacity(0.7); }
-  .school-banner:hover .school-banner-logos img { filter: none; }
+  background: #f4f5f7;
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
 }
 .school-banner-disclaimer {
   font-size: 0.68rem;
