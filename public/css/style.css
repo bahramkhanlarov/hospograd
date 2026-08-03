@@ -420,3 +420,31 @@ h1, h2, h3 {
     display: none;
   }
 }
+
+.school-banner {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.6rem 1.25rem;
+}
+.school-banner-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+.school-banner-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+.school-banner-logos img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.7);
+  transition: filter 0.15s ease;
+}
+.school-banner:hover .school-banner-logos img {
+  filter: none;
+}
