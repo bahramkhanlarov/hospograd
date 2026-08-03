@@ -66,9 +66,10 @@ left to that skill's design judgment within these constraints:
   palette — refine/extend, don't replace
 - Keep the dense table/list structure on `.forum-index`/`.thread-table`
   — these must remain scannable, information-first layouts
-- No new external font/asset dependencies without flagging them first
-  (the site currently loads zero external fonts, by design, after the
-  previous redesign removed Google Fonts)
+- Typography: use **Instrument Serif** (SIL OFL 1.1, self-hosted at
+  `public/fonts/`, not loaded from Google Fonts CDN) for headings and
+  the nav brand only — body/table text stays on the existing system-sans
+  stack. Regular and Italic weights already downloaded and committed.
 
 ## Testing
 No backend changes, so no new Vitest coverage. Manual verification:
