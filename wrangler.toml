@@ -5,7 +5,7 @@ compatibility_date = "2025-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "hospograd"
-database_id = "REPLACE_WITH_REAL_D1_ID"
+database_id = "c47174d7-0cec-4592-acc4-e468078d2bf0"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
