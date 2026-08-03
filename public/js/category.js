@@ -11,7 +11,9 @@ function formatTimestamp(ms) {
 function renderPostList(posts) {
   const table = document.getElementById("post-list");
   if (posts.length === 0) {
-    table.innerHTML = "<tbody><tr><td>No posts in this category yet.</td></tr></tbody>";
+    table.innerHTML =
+      "<thead><tr><th>Thread</th><th class=\"num-col\">Replies</th><th class=\"num-col\">Votes</th><th class=\"num-col\">Started</th></tr></thead>" +
+      "<tbody><tr><td colspan=\"4\">No posts in this category yet.</td></tr></tbody>";
     return;
   }
   const rows = posts

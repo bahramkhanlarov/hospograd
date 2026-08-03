@@ -33,7 +33,7 @@ function renderForumIndex(categories) {
       (c) =>
         "<tr>" +
         '<td class="category-name">' +
-        '<a href="/category.html?slug=' + encodeURIComponent(c.slug) + '">' + categoryIcon(c.slug) + " " + escapeHtml(c.name) + "</a>" +
+        '<a href="/category.html?slug=' + encodeURIComponent(c.slug) + '"><span aria-hidden="true">' + categoryIcon(c.slug) + "</span> " + escapeHtml(c.name) + "</a>" +
         '<div class="category-description">' + escapeHtml(c.description || "") + "</div>" +
         "</td>" +
         '<td class="num-col">' + c.post_count + "</td>" +
