@@ -6,3 +6,4 @@ dist/
 *.log
 .gstack/
 .next/
+*.tsbuildinfo
