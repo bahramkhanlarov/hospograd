@@ -6,6 +6,20 @@ function formatTimestamp(ms) {
   return new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
+const CATEGORY_ICONS = {
+  accommodation: "🏠",
+  "health-insurance": "🩺",
+  "visa-legal": "📋",
+  "jobs-internships": "💼",
+  "money-taxes": "💰",
+  "school-life": "🎓",
+  general: "💬",
+};
+
+function categoryIcon(slug) {
+  return CATEGORY_ICONS[slug] || "📌";
+}
+
 function renderForumIndex(categories) {
   const table = document.getElementById("forum-index");
   const rows = categories
@@ -13,7 +27,7 @@ function renderForumIndex(categories) {
       (c) =>
         "<tr>" +
         '<td class="category-name">' +
-        '<a href="/category.html?slug=' + encodeURIComponent(c.slug) + '">' + escapeHtml(c.name) + "</a>" +
+        '<a href="/category.html?slug=' + encodeURIComponent(c.slug) + '">' + categoryIcon(c.slug) + " " + escapeHtml(c.name) + "</a>" +
         '<div class="category-description">' + escapeHtml(c.description || "") + "</div>" +
         "</td>" +
         '<td class="num-col">' + c.post_count + "</td>" +
