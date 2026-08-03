@@ -128,8 +128,11 @@ export function Globe({ className, config = GLOBE_CONFIG }: GlobeProps) {
         className="size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
         ref={canvasRef}
         onPointerDown={(e) => {
-          pointerInteracting.current = e.clientX
-          updatePointerInteraction(e.clientX)
+          // Offset the new drag baseline by the movement accumulated from
+          // any prior drag so rRef.current doesn't jump back toward 0.
+          updatePointerInteraction(
+            e.clientX - pointerInteractionMovement.current,
+          )
         }}
         onPointerUp={() => updatePointerInteraction(null)}
         onPointerOut={() => updatePointerInteraction(null)}
