@@ -22,6 +22,12 @@ function categoryIcon(slug) {
 
 function renderForumIndex(categories) {
   const table = document.getElementById("forum-index");
+  if (categories.length === 0) {
+    table.innerHTML =
+      "<thead><tr><th>Category</th><th class=\"num-col\">Threads</th><th class=\"num-col\">Latest thread</th></tr></thead>" +
+      "<tbody><tr><td colspan=\"3\">No categories yet.</td></tr></tbody>";
+    return;
+  }
   const rows = categories
     .map(
       (c) =>

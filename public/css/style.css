@@ -419,6 +419,15 @@ h1, h2, h3 {
   .search-input {
     display: none;
   }
+  .school-banner {
+    padding: 0.5rem 0.75rem;
+  }
+  .school-banner-logos {
+    gap: 0.6rem;
+  }
+  .school-banner-logos img {
+    height: 20px;
+  }
 }
 
 .school-banner {
@@ -447,4 +456,16 @@ h1, h2, h3 {
 }
 .school-banner:hover .school-banner-logos img {
   filter: none;
+}
+.school-banner-credit {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  margin: 0.5rem 0 0 0;
+}
+.school-banner-credit a { color: var(--color-text-muted); text-decoration: underline; }
+.school-banner-disclaimer {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  margin: 0.2rem 0 0 0;
+  font-style: italic;
 }
