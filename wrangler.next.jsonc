@@ -1,0 +1,41 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	// SEPARATE Worker from the production `hospograd-api` Worker configured in
+	// `wrangler.toml`. Deploying this one never touches `hospograd-api`.
+	// Cutover of production traffic to this Worker is out of scope here
+	// (deferred to sub-project 5).
+	"name": "hospograd-web",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-04-15",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS",
+		// Next.js treats `public/` as its static asset dir, so OpenNext copies
+		// the *vanilla* site (public/index.html, public/login.html, ...) into
+		// `.open-next/assets`. With the default "auto-trailing-slash" handling,
+		// `/` would resolve to the vanilla `public/index.html` and shadow the
+		// Next.js homepage — likewise `/login` -> `login.html`, etc.
+		// "none" serves assets on exact path match only (so `/_next/*`, `/css/*`,
+		// `/images/*` still work), leaving every page route to the Next.js app.
+		"html_handling": "none"
+	},
+	// Same bindings as `wrangler.toml` so the Hono API mounted at
+	// `app/api/[[...route]]/route.ts` talks to the exact same resources.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "hospograd",
+			"database_id": "c47174d7-0cec-4592-acc4-e468078d2bf0",
+			"migrations_dir": "migrations"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "UPLOADS",
+			"bucket_name": "hospograd-uploads"
+		}
+	]
+	// No [vars]: SESSION_SECRET and RESEND_API_KEY are secrets.
+	// Local: `.dev.vars` (gitignored). Remote: `wrangler secret put ... --config wrangler.next.jsonc`.
+}

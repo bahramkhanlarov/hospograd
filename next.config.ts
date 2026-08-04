@@ -8,3 +8,10 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Give `next dev` access to the Cloudflare bindings declared for the
+// `hospograd-web` Worker (D1 `DB`, R2 `UPLOADS`) via getCloudflareContext().
+// No-op outside of `next dev`.
+import("@opennextjs/cloudflare").then((m) =>
+  m.initOpenNextCloudflareForDev({ configPath: "./wrangler.next.jsonc" })
+);
