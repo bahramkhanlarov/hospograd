@@ -1,4 +1,7 @@
-import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import {
+  defineCloudflareConfig,
+  type OpenNextConfig,
+} from "@opennextjs/cloudflare";
 
 // OpenNext configuration for the Next.js Worker (`hospograd-web`).
 //
@@ -13,4 +16,4 @@ export default {
   // under `build:next` rather than the generic `build` script OpenNext
   // assumes by default.
   buildCommand: "npm run build:next",
-};
+} satisfies OpenNextConfig;
