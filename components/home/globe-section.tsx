@@ -47,12 +47,11 @@ export function GlobeSection() {
   return (
     <section className="my-8 flex flex-col items-center text-center">
       <h2 className="font-display text-2xl font-normal text-foreground">
-        Hospitality careers span the globe
+        Different nationalities, one family.
       </h2>
       <p className="mt-1 max-w-md text-sm text-muted-foreground">
-        These cities are illustrative examples of major hospitality hubs, not
-        a record of where HospoGrad members actually work — we don&rsquo;t
-        collect that data.
+        What brings us together is our shared passion for hospitality and
+        tourism.
       </p>
       <div className="relative mx-auto mt-4 aspect-square w-full max-w-[600px]">
         <Globe
