@@ -259,14 +259,14 @@ export function Component({
       // Pulse ring
       const pulse = Math.sin(time * 2 + marker.lat) * 0.5 + 0.5;
       ctx.beginPath();
-      ctx.arc(sx, sy, 4 + pulse * 4, 0, Math.PI * 2);
+      ctx.arc(sx, sy, 6 + pulse * 6, 0, Math.PI * 2);
       ctx.strokeStyle = markerColor.replace("1)", `${0.2 + pulse * 0.15})`);
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
       // Core dot
       ctx.beginPath();
-      ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+      ctx.arc(sx, sy, 4, 0, Math.PI * 2);
       ctx.fillStyle = markerColor;
       ctx.fill();
 
