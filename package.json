@@ -9,7 +9,7 @@
     "preview:next": "opennextjs-cloudflare build --config wrangler.next.jsonc && opennextjs-cloudflare preview --config wrangler.next.jsonc",
     "deploy:next": "opennextjs-cloudflare build --config wrangler.next.jsonc && opennextjs-cloudflare deploy --config wrangler.next.jsonc",
     "test": "vitest run",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy --config wrangler.toml",
     "db:migrate:local": "wrangler d1 migrations apply hospograd --local",
     "db:migrate:remote": "wrangler d1 migrations apply hospograd --remote"
   },
