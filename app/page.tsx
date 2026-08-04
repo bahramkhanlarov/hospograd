@@ -12,6 +12,15 @@ import { GlobeSection } from "@/components/home/globe-section";
 import { ForumIndex } from "@/components/home/forum-index";
 import { ThreadList } from "@/components/home/thread-list";
 
+// Opt out of static prerendering. This app has no incremental cache
+// configured yet (see open-next.config.ts) — a statically prerendered page
+// gets an `s-maxage=31536000` (1 year) Cache-Control header with no
+// invalidation mechanism, so edits can appear to "not deploy" at some
+// Cloudflare edge nodes for up to a year. All real data on this page is
+// fetched client-side anyway, so static prerendering buys little.
+// Revisit once the incremental cache is wired up (sub-project 5).
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
