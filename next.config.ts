@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   // Disable Next.js 16's auto-generated AGENTS.md/CLAUDE.md at repo root —
   // this repo already has its own CLAUDE.md conventions and workflow.
   agentRules: false,
+  // The school-banner logo strip serves an SVG (shl.svg) through next/image.
+  // OpenNext's image handler 400s on SVGs unless explicitly allowed; this is
+  // Next.js's own documented safe pattern (sandboxed CSP, no script execution).
+  images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 };
 
 export default nextConfig;

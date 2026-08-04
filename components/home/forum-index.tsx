@@ -42,12 +42,17 @@ function formatTimestamp(ms: number | null): string {
 
 export function ForumIndex() {
   const [categories, setCategories] = useState<Category[] | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    apiGet<{ categories: Category[] }>("/api/categories").then((data) => {
-      if (!cancelled) setCategories(data.categories);
-    });
+    apiGet<{ categories: Category[] }>("/api/categories")
+      .then((data) => {
+        if (!cancelled) setCategories(data.categories);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -70,7 +75,16 @@ export function ForumIndex() {
           </tr>
         </thead>
         <tbody>
-          {categories === null ? (
+          {error ? (
+            <tr>
+              <td
+                colSpan={3}
+                className="px-4 py-8 text-center italic text-muted-foreground"
+              >
+                Couldn&rsquo;t load categories.
+              </td>
+            </tr>
+          ) : categories === null ? (
             <tr>
               <td
                 colSpan={3}

@@ -42,13 +42,19 @@ export function ThreadList() {
   const searchParams = useSearchParams();
   const sort = searchParams.get("sort") === "top" ? "top" : "new";
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setPosts(null);
-    apiGet<{ posts: Post[] }>(`/api/posts?sort=${sort}`).then((data) => {
-      if (!cancelled) setPosts(data.posts);
-    });
+    setError(false);
+    apiGet<{ posts: Post[] }>(`/api/posts?sort=${sort}`)
+      .then((data) => {
+        if (!cancelled) setPosts(data.posts);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -91,7 +97,16 @@ export function ThreadList() {
             </tr>
           </thead>
           <tbody>
-            {posts === null ? (
+            {error ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="px-4 py-8 text-center italic text-muted-foreground"
+                >
+                  Couldn&rsquo;t load posts.
+                </td>
+              </tr>
+            ) : posts === null ? (
               <tr>
                 <td
                   colSpan={4}

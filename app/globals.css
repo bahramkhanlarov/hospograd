@@ -19,17 +19,17 @@
   --link: #5eb3ff;
   --destructive: #e2694a;
 
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --card-foreground: #e8ecf0;
+  --popover: #171f2b;
+  --popover-foreground: #e8ecf0;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --secondary: #1c2532;
+  --secondary-foreground: #e8ecf0;
+  --muted: #2a3441;
+  --accent: #1c2532;
+  --accent-foreground: #e8ecf0;
+  --input: #2a3441;
+  --ring: #14b892;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -57,9 +57,9 @@
   --color-link: var(--link);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 10px 24px -10px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-sans: var(--font-ui);
+  --font-mono: ui-monospace, monospace;
+  --font-display: var(--font-display);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -101,28 +101,30 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  /* This app is dark-themed by default (see :root above); .dark mirrors the
+     same corrected tokens rather than shadcn's separate light/dark scheme,
+     since there is no light mode to fall back to. */
+  --background: #0f1720;
+  --foreground: #e8ecf0;
+  --card: #171f2b;
+  --card-foreground: #e8ecf0;
+  --popover: #171f2b;
+  --popover-foreground: #e8ecf0;
+  --primary: #14b892;
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: #1c2532;
+  --secondary-foreground: #e8ecf0;
+  --muted: #2a3441;
+  --muted-foreground: #8b95a3;
+  --accent: #1c2532;
+  --accent-foreground: #e8ecf0;
+  --destructive: #e2694a;
+  --border: #2a3441;
+  --input: #2a3441;
+  --ring: #14b892;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
