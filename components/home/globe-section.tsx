@@ -1,14 +1,14 @@
 // Renders the Globe (components/ui/interactive-globe.tsx) marked with a
 // handful of well-known hospitality hub cities. These markers are explicitly
-// illustrative — HospoGrad does not collect alumni location data, so the
-// copy below frames this as "hospitality careers span the globe" rather than
-// claiming the markers represent actual member locations.
+// illustrative: HospoGrad does not collect alumni location data, so the
+// copy below frames this as "careers tend to go here" rather than claiming
+// the markers represent actual member locations.
 
 import { Component as Globe } from "@/components/ui/interactive-globe";
 
-// Illustrative hospitality-hub cities. Dot/arc/marker colors reuse the
-// existing dark-theme tokens (--primary, --link) rather than inventing new
-// brand colors.
+// Illustrative hospitality-hub cities. Dot field uses the brand pine green
+// (--primary equivalent), arcs/markers use the copper accent reserved for
+// this one component so it reads as a deliberate motif, not a random color.
 const HOSPITALITY_HUB_MARKERS = [
   { lat: 25.2048, lng: 55.2708, label: "Dubai" },
   { lat: 1.3521, lng: 103.8198, label: "Singapore" },
@@ -45,22 +45,25 @@ const HOSPITALITY_HUB_CONNECTIONS = [
 
 export function GlobeSection() {
   return (
-    <section className="my-8 flex flex-col items-center text-center">
-      <h2 className="font-display text-2xl font-normal text-foreground">
-        Different nationalities, one family.
-      </h2>
-      <p className="mt-1 max-w-md text-sm text-muted-foreground">
-        What brings us together is our shared passion for hospitality and
-        tourism.
-      </p>
-      <div className="relative mx-auto mt-4 aspect-square w-full max-w-[600px]">
+    <section className="my-10 grid grid-cols-1 items-center gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
+      <div className="max-w-md">
+        <h2 className="font-display text-[1.9rem] font-medium leading-[1.1] text-foreground text-balance">
+          A hospitality degree travels further than most.
+        </h2>
+        <p className="mt-3 text-[0.92rem] leading-relaxed text-muted-foreground">
+          Alumni from Glion, EHL, Les Roches and the other Swiss schools land
+          in kitchens, front desks and head offices on every continent. The
+          globe traces where those careers tend to go.
+        </p>
+      </div>
+      <div className="relative mx-auto aspect-square w-full max-w-[560px]">
         <Globe
           className="w-full h-full"
           markers={HOSPITALITY_HUB_MARKERS}
           connections={HOSPITALITY_HUB_CONNECTIONS}
-          dotColor="rgba(20, 184, 146, ALPHA)"
-          arcColor="rgba(20, 184, 146, 0.4)"
-          markerColor="rgba(94, 179, 255, 1)"
+          dotColor="rgba(31, 92, 69, ALPHA)"
+          arcColor="rgba(31, 92, 69, 0.35)"
+          markerColor="rgba(177, 89, 47, 1)"
         />
       </div>
     </section>

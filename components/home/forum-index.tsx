@@ -32,7 +32,7 @@ function categoryIcon(slug: string): string {
 }
 
 function formatTimestamp(ms: number | null): string {
-  if (!ms) return "—";
+  if (!ms) return "Not yet";
   return new Date(ms).toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
@@ -107,7 +107,7 @@ export function ForumIndex() {
               <tr key={c.slug} className="last:[&>td]:border-b-0 hover:[&>td]:bg-card-hover">
                 <td className="border-b border-border px-3 py-[0.6rem] align-top font-semibold">
                   <a
-                    href={`/category.html?slug=${encodeURIComponent(c.slug)}`}
+                    href={`/category/${encodeURIComponent(c.slug)}`}
                     className="text-foreground"
                   >
                     <span aria-hidden="true">{categoryIcon(c.slug)}</span> {c.name}

@@ -30,7 +30,7 @@ export default function Home() {
       <div className="mx-auto w-full max-w-5xl flex-1 px-5 py-4">
         <p className="font-display mb-[1.1rem] text-[1.15rem] italic leading-[1.4] text-muted-foreground">
           Switzerland&rsquo;s community for hotel management students and
-          alumni &mdash; housing, visas, jobs, and everything in between.
+          alumni, covering housing, visas, jobs, and everything in between.
         </p>
         <GlobeSection />
         <ForumIndex />
@@ -50,10 +50,10 @@ function ThreadListFallback() {
   return (
     <>
       <div className="mb-2 flex gap-2">
-        <span className="inline-block rounded-sm border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground">
+        <span className="inline-block rounded-full border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground">
           New
         </span>
-        <span className="inline-block rounded-sm border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground">
+        <span className="inline-block rounded-full border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground">
           Top
         </span>
       </div>

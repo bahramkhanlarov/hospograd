@@ -110,6 +110,17 @@ export function Component({
   }>({ active: false, startX: 0, startY: 0, startRotY: 0, startRotX: 0 });
   const animRef = useRef<number>(0);
   const timeRef = useRef(0);
+  const reducedMotionRef = useRef(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotionRef.current = mql.matches;
+    const onChange = (e: MediaQueryListEvent) => {
+      reducedMotionRef.current = e.matches;
+    };
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   // Generate globe dots (land approximation via density sampling)
   const dotsRef = useRef<[number, number, number][]>([]);
@@ -148,12 +159,15 @@ export function Component({
     const radius = Math.min(w, h) * 0.38;
     const fov = 600;
 
-    // Auto rotate
-    if (!dragRef.current.active) {
+    // Auto rotate. Reduced-motion users still see the globe (and can still
+    // drag it) but get no perpetual rotation or pulse animation.
+    if (!dragRef.current.active && !reducedMotionRef.current) {
       rotYRef.current += autoRotateSpeed;
     }
 
-    timeRef.current += 0.015;
+    if (!reducedMotionRef.current) {
+      timeRef.current += 0.015;
+    }
     const time = timeRef.current;
 
     ctx.clearRect(0, 0, w, h);

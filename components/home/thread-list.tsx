@@ -25,7 +25,7 @@ interface Post {
 }
 
 function formatTimestamp(ms: number | null): string {
-  if (!ms) return "—";
+  if (!ms) return "Not yet";
   return new Date(ms).toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
@@ -34,9 +34,9 @@ function formatTimestamp(ms: number | null): string {
 }
 
 const sortBtnClass =
-  "inline-block rounded-sm border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/10";
+  "inline-block rounded-full border border-border bg-transparent px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/10";
 const sortBtnActiveClass =
-  "border-primary bg-primary text-white hover:bg-primary-hover";
+  "border-primary bg-primary text-primary-foreground hover:bg-primary-hover";
 
 export function ThreadList() {
   const searchParams = useSearchParams();
@@ -128,11 +128,14 @@ export function ThreadList() {
               posts.map((p) => (
                 <tr key={p.id} className="last:[&>td]:border-b-0 hover:[&>td]:bg-card-hover">
                   <td className="border-b border-border px-3 py-[0.6rem] align-top font-semibold">
-                    <a href={`/post.html?id=${encodeURIComponent(p.id)}`} className="text-foreground">
+                    <a href={`/posts/${encodeURIComponent(p.id)}`} className="text-foreground">
                       {p.title}
                     </a>
-                    <div className="mt-[0.1rem] text-[0.78rem] text-muted-foreground">
-                      u/{p.username} &middot; {p.school} &middot; {p.status}
+                    <div className="mt-[0.15rem] flex items-center gap-1.5 text-[0.78rem] text-muted-foreground">
+                      u/{p.username} &middot; {p.school}
+                      <span className="rounded-full border border-border px-1.5 py-px text-[0.62rem] font-medium uppercase tracking-wide">
+                        {p.status}
+                      </span>
                     </div>
                   </td>
                   <td className="whitespace-nowrap border-b border-border px-3 py-[0.6rem] text-right align-top text-muted-foreground [font-variant-numeric:tabular-nums]">
