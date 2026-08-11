@@ -48,3 +48,40 @@ admin.get("/reports", async (c) => {
   ).all();
   return c.json({ reports: results });
 });
+
+admin.post("/reports/:id/resolve", async (c) => {
+  const id = c.req.param("id");
+  const result = await c.env.DB.prepare("UPDATE reports SET status = 'resolved' WHERE id = ? AND status = 'open'")
+    .bind(id)
+    .run();
+  if (result.meta.changes === 0) {
+    return c.json({ error: "Report not found or already resolved" }, 404);
+  }
+  return c.json({ message: "Report resolved" });
+});
+
+admin.delete("/posts/:id", async (c) => {
+  const id = c.req.param("id");
+  // Delete comments first, then votes, then the post
+  await c.env.DB.prepare("DELETE FROM comments WHERE post_id = ?").bind(id).run();
+  await c.env.DB.prepare("DELETE FROM votes WHERE target_type = 'post' AND target_id = ?").bind(id).run();
+  await c.env.DB.prepare("DELETE FROM reports WHERE target_type = 'post' AND target_id = ?").bind(id).run();
+  const result = await c.env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run();
+  if (result.meta.changes === 0) {
+    return c.json({ error: "Post not found" }, 404);
+  }
+  return c.json({ message: "Post deleted" });
+});
+
+admin.delete("/comments/:id", async (c) => {
+  const id = c.req.param("id");
+  // Delete child comments, votes, and reports for this comment
+  await c.env.DB.prepare("DELETE FROM comments WHERE parent_comment_id = ?").bind(id).run();
+  await c.env.DB.prepare("DELETE FROM votes WHERE target_type = 'comment' AND target_id = ?").bind(id).run();
+  await c.env.DB.prepare("DELETE FROM reports WHERE target_type = 'comment' AND target_id = ?").bind(id).run();
+  const result = await c.env.DB.prepare("DELETE FROM comments WHERE id = ?").bind(id).run();
+  if (result.meta.changes === 0) {
+    return c.json({ error: "Comment not found" }, 404);
+  }
+  return c.json({ message: "Comment deleted" });
+});

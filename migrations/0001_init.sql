@@ -72,4 +72,10 @@ INSERT INTO categories (slug, name, description) VALUES
   ('jobs-internships', 'Jobs & Internships', 'Job postings, internship advice, employer reviews.'),
   ('money-taxes', 'Money & Taxes', 'Banking, taxes, budgeting in Switzerland.'),
   ('school-life', 'School Life & Courses', 'Courses, professors, campus life by school.'),
-  ('general', 'General Discussion', 'Everything else.');
+  ('general', 'General Discussion', 'Everything else.'),
+  ('careers', 'Careers & Professional Development', 'Career growth, CV reviews, interviews, and salary discussions.'),
+  ('cv-reviews', 'CV Reviews', 'Get feedback on your CV and résumé from peers and professionals.'),
+  ('interview-tips', 'Interview Tips', 'Interview experiences, advice, and preparation tips.'),
+  ('salary-discussions', 'Salary Discussions', 'Salary ranges, negotiations, and compensation talk.'),
+  ('management-trainee', 'Management Trainee Programs', 'MT programs, applications, and experiences.'),
+  ('career-changes', 'Career Changes', 'Switching paths, upskilling, and career transitions.');

@@ -4,11 +4,11 @@ import { createSessionToken } from "../../src/lib/session";
 import { hashSecret } from "../../src/lib/crypto";
 
 describe("GET /categories", () => {
-  it("returns the 7 seeded categories", async () => {
+  it("returns the 13 seeded categories", async () => {
     const res = await SELF.fetch("https://example.com/api/categories");
     expect(res.status).toBe(200);
     const body = (await res.json()) as { categories: { slug: string }[] };
-    expect(body.categories).toHaveLength(7);
+    expect(body.categories).toHaveLength(13);
   });
 
   it("returns post_count 0 and last_post_at null for a category with no posts", async () => {

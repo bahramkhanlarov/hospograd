@@ -2,9 +2,9 @@ import { env } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 
 describe("schema", () => {
-  it("seeds 7 categories", async () => {
+  it("seeds 13 categories", async () => {
     const { results } = await env.DB.prepare("SELECT slug FROM categories ORDER BY id").all();
-    expect(results).toHaveLength(7);
+    expect(results).toHaveLength(13);
     expect((results[0] as { slug: string }).slug).toBe("accommodation");
   });
 

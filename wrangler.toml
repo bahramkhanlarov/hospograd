@@ -2,6 +2,9 @@ name = "hospograd-api"
 main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
+[triggers]
+crons = ["0 */4 * * *"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "hospograd"

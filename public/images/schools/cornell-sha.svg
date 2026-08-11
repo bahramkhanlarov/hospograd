@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="300" height="120">
+  <rect width="300" height="120" fill="#b31b1b" rx="6"/>
+  <text x="150" y="48" font-family="Georgia,serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle" letter-spacing="1">CORNELL</text>
+  <text x="150" y="70" font-family="Arial,sans-serif" font-size="10" fill="#e8a0a0" text-anchor="middle">Peter and Stephanie Nolan School of</text>
+  <text x="150" y="86" font-family="Arial,sans-serif" font-size="10" fill="#e8a0a0" text-anchor="middle">Hotel Administration</text>
+</svg>
