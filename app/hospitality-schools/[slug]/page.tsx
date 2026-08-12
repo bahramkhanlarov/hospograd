@@ -52,6 +52,7 @@ export default async function HospitalitySchoolPage({ params }: { params: Promis
           {/* Quick facts */}
           <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {school.founded ? <Fact label="Founded" value={school.founded} /> : null}
+            {school.ranking ? <Fact label="Ranking" value={school.ranking} /> : null}
             <Fact label="Campuses" value={String(school.campuses.length)} />
             <Fact label="Fees" value={school.fees} />
           </div>
