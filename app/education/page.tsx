@@ -2,6 +2,7 @@ import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import { CAMPS } from "@/lib/camps";
+import { WINTER_CAMPS } from "@/lib/winter-camps";
 
 // Restyled onto the site's pine/copper design system (see app/globals.css)
 // with real Alpine photography instead of gradient-plus-emoji tiles.
@@ -30,19 +31,27 @@ const CATEGORY_TILES = [
     label: "Summer Camps",
   },
   {
-    href: "/category/general",
+    href: "#winter-camps",
     img: "/images/education/tile-winter.jpg",
     label: "Winter Camps",
   },
 ] as const;
 
-const CAMP_PROGRAMS = [
+const SUMMER_CAMP_PROGRAMS = [
   "Language classes",
   "Active adventures",
   "Art, theatre & music",
   "Culinary classes",
   "Digital skills",
   "Leadership skills",
+  "Sport activities",
+] as const;
+
+const WINTER_CAMP_PROGRAMS = [
+  "Language classes",
+  "Culinary classes",
+  "Leadership skills",
+  "Science",
   "Sport activities",
 ] as const;
 
@@ -248,6 +257,7 @@ export default function EducationPage() {
                 <CampCard
                   key={slug}
                   slug={slug}
+                  basePath="camps"
                   name={camp.name}
                   location={camp.location}
                   img={camp.cardImg}
@@ -267,7 +277,52 @@ export default function EducationPage() {
               you commit.
             </p>
             <div className="flex flex-wrap gap-2">
-              {CAMP_PROGRAMS.map((program) => (
+              {SUMMER_CAMP_PROGRAMS.map((program) => (
+                <span
+                  key={program}
+                  className="rounded-full border border-border bg-secondary px-3 py-1.5 text-[0.78rem] font-medium text-foreground"
+                >
+                  {program}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          {/* Swiss Winter Camps directory */}
+          <section id="winter-camps" className="mb-14 scroll-mt-6">
+            <h2 className="font-display mb-2 text-[1.7rem] font-medium text-foreground">
+              Swiss Winter Camps
+            </h2>
+            <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              Ski and snowboard camps in the classic resort towns, most
+              running weekly sessions from mid-December to April, with
+              boarding typically starting around CHF 1,200 to 2,200 a week.
+            </p>
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {Object.entries(WINTER_CAMPS).map(([slug, camp]) => (
+                <CampCard
+                  key={slug}
+                  slug={slug}
+                  basePath="winter-camps"
+                  name={camp.name}
+                  location={camp.location}
+                  img={camp.cardImg}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Academic programs in Swiss winter camps */}
+          <section className="mb-14">
+            <h2 className="font-display mb-2 text-[1.7rem] font-medium text-foreground">
+              Academic programs in Swiss winter camps
+            </h2>
+            <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              A shorter list than summer, mostly built around the fact that
+              everyone's on the slopes half the day.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {WINTER_CAMP_PROGRAMS.map((program) => (
                 <span
                   key={program}
                   className="rounded-full border border-border bg-secondary px-3 py-1.5 text-[0.78rem] font-medium text-foreground"
@@ -358,18 +413,20 @@ function HospSchoolCard({ name, img, desc, slug }: { name: string; img: string; 
 
 function CampCard({
   slug,
+  basePath,
   name,
   location,
   img,
 }: {
   slug: string;
+  basePath: "camps" | "winter-camps";
   name: string;
   location: string;
   img: string;
 }) {
   return (
     <Link
-      href={`/camps/${slug}`}
+      href={`/${basePath}/${slug}`}
       className="group block overflow-hidden rounded-md border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="aspect-[4/3] overflow-hidden">
