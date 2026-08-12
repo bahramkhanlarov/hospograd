@@ -1,6 +1,7 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
+import { CAMPS } from "@/lib/camps";
 
 // Restyled onto the site's pine/copper design system (see app/globals.css)
 // with real Alpine photography instead of gradient-plus-emoji tiles.
@@ -243,31 +244,15 @@ export default function EducationPage() {
               2,100.
             </p>
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              <SchoolCard
-                name="Les Elfes International Summer Camp"
-                location="Verbier, Valais"
-                desc="International multi-activity camp in a mountain village. Language classes, sport and alpine adventure alongside boarding-school-age campers from 80+ countries."
-              />
-              <SchoolCard
-                name="Institut Montana Summer Camp"
-                location="Zugerberg, Zug"
-                desc="Runs on the Institut Montana boarding campus above Lake Zug. Language immersion, sport and excursions across central Switzerland."
-              />
-              <SchoolCard
-                name="The Rosenberg Camps"
-                location="St. Gallen, St. Gallen Region"
-                desc="Summer program on the Institut auf dem Rosenberg campus. Tailored language and academic tracks alongside sport and excursions, in the school's private parkland."
-              />
-              <SchoolCard
-                name="Lyceum Alpinum Zuoz Summer Camp"
-                location="Zuoz, Engadin"
-                desc="High-altitude camp on the Lyceum Alpinum boarding campus in the Engadin valley. Alpine sport, language classes and excursions at 1,700m."
-              />
-              <SchoolCard
-                name="Haut-Lac Summer Camps"
-                location="Saint-Légier-La Chiésaz, Lake Geneva Area"
-                desc="Bilingual English/French day and residential camps run by the Haut-Lac International Bilingual School near Vevey and Montreux."
-              />
+              {Object.entries(CAMPS).map(([slug, camp]) => (
+                <CampCard
+                  key={slug}
+                  slug={slug}
+                  name={camp.name}
+                  location={camp.location}
+                  img={camp.cardImg}
+                />
+              ))}
             </div>
           </section>
 
@@ -367,6 +352,40 @@ function HospSchoolCard({ name, img, desc, slug }: { name: string; img: string; 
       <img src={img} alt={name} className="mb-2 h-9 w-auto rounded-sm bg-secondary object-contain px-3 py-1" />
       <h3 className="mb-1 text-[0.85rem] font-semibold text-foreground group-hover:text-primary">{name}</h3>
       <p className="text-[0.78rem] leading-relaxed text-muted-foreground">{desc}</p>
+    </Link>
+  );
+}
+
+function CampCard({
+  slug,
+  name,
+  location,
+  img,
+}: {
+  slug: string;
+  name: string;
+  location: string;
+  img: string;
+}) {
+  return (
+    <Link
+      href={`/camps/${slug}`}
+      className="group block overflow-hidden rounded-md border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
+    >
+      <div className="aspect-[4/3] overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={img}
+          alt=""
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4">
+        <h3 className="mb-0.5 text-[0.9rem] font-semibold leading-snug text-foreground group-hover:text-primary">
+          {name}
+        </h3>
+        <p className="text-[0.75rem] text-muted-foreground">{location}</p>
+      </div>
     </Link>
   );
 }
