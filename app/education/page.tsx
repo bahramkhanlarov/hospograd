@@ -24,7 +24,7 @@ const CATEGORY_TILES = [
     label: "Boarding Schools",
   },
   {
-    href: "/category/general",
+    href: "#summer-camps",
     img: "/images/education/tile-summer.jpg",
     label: "Summer Camps",
   },
@@ -33,6 +33,16 @@ const CATEGORY_TILES = [
     img: "/images/education/tile-winter.jpg",
     label: "Winter Camps",
   },
+] as const;
+
+const CAMP_PROGRAMS = [
+  "Language classes",
+  "Active adventures",
+  "Art, theatre & music",
+  "Culinary classes",
+  "Digital skills",
+  "Leadership skills",
+  "Sport activities",
 ] as const;
 
 export default function EducationPage() {
@@ -218,6 +228,68 @@ export default function EducationPage() {
                 location="Lausanne"
                 desc="Bilingual school with 120+ years of tradition. IB Diploma, French Bac, Swiss Maturité. Family-sized boarding. Part of Nord Anglia Education."
               />
+            </div>
+          </section>
+
+          {/* Swiss Summer Camps directory */}
+          <section id="summer-camps" className="mb-14 scroll-mt-6">
+            <h2 className="font-display mb-2 text-[1.7rem] font-medium text-foreground">
+              Swiss Summer Camps
+            </h2>
+            <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              Multi-week residential camps that blend language learning with
+              outdoor skills and sport. Most run two weeks minimum from late
+              June to mid-August, with weekly boarding starting around CHF
+              2,100.
+            </p>
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <SchoolCard
+                name="Les Elfes International Summer Camp"
+                location="Verbier, Valais"
+                desc="International multi-activity camp in a mountain village. Language classes, sport and alpine adventure alongside boarding-school-age campers from 80+ countries."
+              />
+              <SchoolCard
+                name="Institut Montana Summer Camp"
+                location="Zugerberg, Zug"
+                desc="Runs on the Institut Montana boarding campus above Lake Zug. Language immersion, sport and excursions across central Switzerland."
+              />
+              <SchoolCard
+                name="The Rosenberg Camps"
+                location="St. Gallen, St. Gallen Region"
+                desc="Summer program on the Institut auf dem Rosenberg campus. Tailored language and academic tracks alongside sport and excursions, in the school's private parkland."
+              />
+              <SchoolCard
+                name="Lyceum Alpinum Zuoz Summer Camp"
+                location="Zuoz, Engadin"
+                desc="High-altitude camp on the Lyceum Alpinum boarding campus in the Engadin valley. Alpine sport, language classes and excursions at 1,700m."
+              />
+              <SchoolCard
+                name="Haut-Lac Summer Camps"
+                location="Saint-Légier-La Chiésaz, Lake Geneva Area"
+                desc="Bilingual English/French day and residential camps run by the Haut-Lac International Bilingual School near Vevey and Montreux."
+              />
+            </div>
+          </section>
+
+          {/* Academic programs in Swiss summer camps */}
+          <section className="mb-14">
+            <h2 className="font-display mb-2 text-[1.7rem] font-medium text-foreground">
+              Academic programs in Swiss summer camps
+            </h2>
+            <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              Camps mix and match from the same handful of tracks. Worth
+              checking which ones a given camp actually runs that week before
+              you commit.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {CAMP_PROGRAMS.map((program) => (
+                <span
+                  key={program}
+                  className="rounded-full border border-border bg-secondary px-3 py-1.5 text-[0.78rem] font-medium text-foreground"
+                >
+                  {program}
+                </span>
+              ))}
             </div>
           </section>
 
