@@ -124,7 +124,7 @@ export default function EducationPage() {
                 <CampCard
                   key={slug}
                   slug={slug}
-                  basePath="schools"
+                  basePath="hospitality-schools"
                   name={school.name}
                   location={school.location}
                   img={school.img}
@@ -310,7 +310,7 @@ function CampCard({
   img,
 }: {
   slug: string;
-  basePath: "camps" | "winter-camps" | "boarding-schools" | "schools";
+  basePath: "camps" | "winter-camps" | "boarding-schools" | "hospitality-schools";
   name: string;
   location: string;
   img: string;

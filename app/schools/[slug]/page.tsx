@@ -1,8 +1,13 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import { SchoolPosts } from "./school-posts";
 import { HOSPITALITY_SCHOOLS } from "@/lib/hospitality-schools";
+
+// Forum listing for a school — posts tagged to it. The photo/campus/programs
+// brochure content lives at /hospitality-schools/[slug]; this page just
+// links there rather than duplicating the hero.
 
 export const dynamic = "force-dynamic";
 
@@ -27,26 +32,17 @@ export default async function SchoolPage({
           { label: info.short },
         ]}
       />
-      {/* Hero */}
-      <div className="relative flex h-[280px] items-end overflow-hidden">
-        <img
-          src={info.img}
-          alt={`${info.name} campus`}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[oklch(20%_0.02_155/0.85)] via-[oklch(20%_0.02_155/0.3)] to-transparent" />
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-7">
-          <h1 className="font-display max-w-xl text-[1.9rem] font-medium leading-[1.1] text-white text-balance">
-            {info.short}
-          </h1>
-          <p className="mt-1.5 text-[0.85rem] text-white/85">{info.location}</p>
-        </div>
-      </div>
-
       <div className="mx-auto w-full max-w-5xl flex-1 px-5 py-6">
-        <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
-          {info.desc}
-        </p>
+        <h1 className="font-display mb-1 text-[1.6rem] font-normal tracking-[-0.01em] text-foreground">
+          {info.short}
+        </h1>
+        <p className="mb-1 text-[0.82rem] text-muted-foreground">{info.name}</p>
+        <Link
+          href={`/hospitality-schools/${slug}`}
+          className="mb-6 inline-block text-[0.8rem] font-medium text-link hover:underline"
+        >
+          View school profile →
+        </Link>
         <Suspense fallback={<p className="italic text-muted-foreground">Loading posts…</p>}>
           <SchoolPosts slug={slug} schoolName={info.short} />
         </Suspense>
