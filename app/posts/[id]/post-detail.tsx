@@ -338,13 +338,21 @@ function CommentItem({
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[0.78rem] text-muted-foreground">
+          <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[0.78rem] text-muted-foreground">
             <Link
               href={`/profile/${encodeURIComponent(comment.username)}`}
               className="font-medium text-link hover:underline"
             >
               u/{comment.username}
             </Link>
+            {comment.username === "hospograd-team" && (
+              <span
+                className="rounded-full bg-secondary px-2 py-0.5 text-[0.68rem] font-medium text-muted-foreground"
+                title="AI-drafted, reviewed and approved by a HospoGrad admin before posting"
+              >
+                AI-assisted
+              </span>
+            )}
             <span>&middot; {comment.school}</span>
             <span>&middot; {comment.status}</span>
             <span>&middot; {formatTimestamp(comment.created_at)}</span>

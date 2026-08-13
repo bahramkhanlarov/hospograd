@@ -72,6 +72,7 @@ export default function AdminPage() {
   const [verifications, setVerifications] = useState<VerificationUser[]>([]);
   const [reports, setReports] = useState<Report[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [editedSuggestions, setEditedSuggestions] = useState<Record<string, string>>({});
 
   const [loadingVerifications, setLoadingVerifications] = useState(true);
   const [loadingReports, setLoadingReports] = useState(true);
@@ -216,11 +217,18 @@ export default function AdminPage() {
     }
   }
 
-  async function handleApproveSuggestion(suggestionId: string) {
+  async function handleApproveSuggestion(suggestionId: string, editedBody: string) {
     setActingSuggestion(suggestionId);
     try {
-      await apiPost(`/api/suggestions/${encodeURIComponent(suggestionId)}/approve`);
+      await apiPost(`/api/suggestions/${encodeURIComponent(suggestionId)}/approve`, {
+        body: editedBody,
+      });
       await fetchSuggestions();
+      setEditedSuggestions((prev) => {
+        const next = { ...prev };
+        delete next[suggestionId];
+        return next;
+      });
     } catch (err) {
       console.error("approve suggestion failed", err);
       alert(err instanceof Error ? err.message : "Action failed");
@@ -331,7 +339,9 @@ export default function AdminPage() {
             <p className="italic text-muted-foreground">No pending suggestions.</p>
           ) : (
             <div className="space-y-4">
-              {suggestions.map((s) => (
+              {suggestions.map((s) => {
+                const edited = editedSuggestions[s.id] ?? s.body;
+                return (
                 <div
                   key={s.id}
                   className="rounded-md border border-border bg-card p-4"
@@ -344,17 +354,27 @@ export default function AdminPage() {
                       by {s.post_author}
                     </span>
                   </div>
-                  <div className="mb-3 whitespace-pre-wrap rounded-sm bg-muted/50 px-3 py-2 text-[0.85rem] leading-relaxed text-foreground">
-                    {s.body}
-                  </div>
+                  <p className="mb-1.5 text-[0.72rem] text-muted-foreground">
+                    AI-drafted. Review and edit before posting — it will be
+                    published under the &ldquo;hospograd-team&rdquo; account,
+                    not yours.
+                  </p>
+                  <textarea
+                    value={edited}
+                    onChange={(e) =>
+                      setEditedSuggestions((prev) => ({ ...prev, [s.id]: e.target.value }))
+                    }
+                    rows={4}
+                    className="mb-3 w-full resize-y rounded-sm border border-border bg-muted/50 px-3 py-2 text-[0.85rem] leading-relaxed text-foreground outline-none transition-colors focus:border-primary"
+                  />
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      disabled={actingSuggestion === s.id}
-                      onClick={() => handleApproveSuggestion(s.id)}
+                      disabled={actingSuggestion === s.id || !edited.trim()}
+                      onClick={() => handleApproveSuggestion(s.id, edited)}
                       className="cursor-pointer rounded-sm bg-primary px-3 py-1 text-[0.8rem] font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {actingSuggestion === s.id ? "…" : "Approve & post"}
+                      {actingSuggestion === s.id ? "…" : "Post as HospoGrad Team"}
                     </button>
                     <button
                       type="button"
@@ -366,7 +386,8 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
