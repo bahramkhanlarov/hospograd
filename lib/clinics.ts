@@ -359,4 +359,62 @@ export const CLINICS: Record<string, ClinicInfo> = {
     fees: "Contact the clinic directly for pricing.",
     website: "https://www.swissmedical.net/en/hospitals/generale-beaulieu",
   },
+  "clinique-de-carouge": {
+    name: "Clinique de Carouge",
+    location: "Carouge, Geneva",
+    img: "/images/clinics/clinique-de-carouge.jpg",
+    focus: "Interdisciplinary health centre and ambulatory care",
+    intro:
+      "An interdisciplinary health centre on the banks of the River Arve in Carouge, part of the Arsanté care network since 2020. It offers a wide range of medical specialties, an ambulatory care centre, day surgery, short local hospitalisations and an emergency service open seven days a week.",
+    description:
+      "Clinique de Carouge is an interdisciplinary health centre in Carouge, in the canton of Geneva, on the banks of the River Arve. It joined the Arsanté care network — which groups together around twenty healthcare establishments in the canton — on 1 June 2020, and focuses on local, ambulatory medicine: a broad range of medical specialties — cardiology, orthopaedics, dermatology, endocrinology and diabetology, gynaecology and obstetrics, haematology, neurology, oncology, ENT, paediatrics, psychiatry and rheumatology among them — plus an ambulatory care centre (CSA) providing outpatient treatments such as intravenous and oncological therapies, an emergency service open every day of the week, day surgery, and short hospitalisations for patients who need overnight care. It also runs a medically supervised temporary residential unit (UATm) for vulnerable people. Its outpatient services are available to all patients, including those with basic health insurance.",
+    highlights: [
+      "Interdisciplinary centre with a wide range of medical specialties",
+      "Part of the Arsanté care network since June 2020",
+      "Ambulatory care centre, day surgery and short local hospitalisations",
+      "Emergency service open seven days a week",
+    ],
+    fees: "Contact the clinic directly for pricing.",
+    website: "https://www.cliniquedecarouge.ch/",
+  },
+  "hirslanden-clinique-cecil": {
+    name: "Hirslanden Clinique Cécil",
+    location: "Lausanne (Vaud)",
+    img: "/images/clinics/hirslanden-clinique-cecil.jpg",
+    founded: "1931",
+    beds: "86",
+    focus: "Cardiology, cardiovascular surgery, gynaecology-obstetrics and internal medicine",
+    intro:
+      "A leading private hospital in the heart of Lausanne, founded in 1931 in a former luxury hotel and part of the Hirslanden Group since 1990. With 86 beds, 6 operating theatres, a maternity unit and a 24/7 emergency centre, it specialises in cardiology, cardiovascular surgery, gastrointestinal surgery, gynaecology and obstetrics, urology, neurosurgery and internal medicine.",
+    description:
+      "Hirslanden Clinique Cécil occupies a former luxury hotel in central Lausanne. The Hôtel Cecil was built between 1905 and 1907 and, after a crisis in the hotel trade, was converted into a hospital in 1931. It was bought by what became the Hirslanden Group in 1990 and is now one of the leading private hospitals in French-speaking Switzerland. The clinic has 86 beds, 7 of them in an SSICM-recognised intensive care unit, 6 operating theatres (including one hybrid), 2 delivery rooms and around 387 affiliated specialists. It specialises in cardiology and cardiovascular surgery, gastrointestinal surgery, surgical gynaecology and obstetrics, urology, neurosurgery and internal medicine, and hosts a network of institutes including a multidisciplinary pain centre, a centre for medically assisted procreation, a dialysis centre, a maternity and obstetrics unit, and an emergency centre open 24 hours a day, 7 days a week.",
+    highlights: [
+      "Founded 1931 in a former luxury hotel; part of Hirslanden since 1990",
+      "86 beds, 6 operating theatres and an SSICM-recognised intensive care unit",
+      "Cardiology, cardiovascular surgery, gynaecology-obstetrics and internal medicine",
+      "Emergency centre open 24/7 and a maternity and obstetrics unit",
+    ],
+    fees: "Contact the clinic directly for pricing.",
+    website: "https://www.hirslanden.ch/en/clinique-cecil/home.html",
+  },
+  "chuv-lausanne": {
+    name: "CHUV — Lausanne University Hospital",
+    location: "Lausanne (Vaud)",
+    img: "/images/clinics/chuv-lausanne.jpg",
+    founded: "1890",
+    beds: "1,568",
+    focus: "University hospital — acute and specialist care for the canton of Vaud",
+    intro:
+      "One of Switzerland's five university hospitals and the main public hospital of the canton of Vaud, in Lausanne. With 1,568 beds and over 11,000 staff, it covers the full range of medical treatment, from general and emergency care to specialised centres for oncology, cardiac surgery, neuroscience and transplants, and is a major centre for medical research and teaching.",
+    description:
+      "The Centre hospitalier universitaire vaudois (CHUV) is one of the five university hospitals in Switzerland and the main public hospital of the canton of Vaud. Its origins go back to the Middle Ages — a hospice was founded in Villeneuve in 1236, and the Hôpital Notre-Dame in Lausanne was taken over as the cantonal hospital in 1806 — and it was elevated to the status of a university hospital with a faculty of medicine in 1890. Today it operates across several sites with 1,568 beds and more than 11,000 staff, admitting over 50,000 patients a year. The CHUV covers all areas of medicine: emergency care, general and specialist acute care for the whole canton, and university-level specialised centres in fields such as oncology, cardiac surgery, clinical neurosciences, orthopaedics and the musculoskeletal system, obstetrics and medical genetics, and psychiatry. In partnership with the Faculty of Biology and Medicine of the University of Lausanne and EPFL, it is also one of Switzerland's most important centres for medical research and training. As a public hospital it treats patients under basic health insurance; private care is available through its semi-private and private wards.",
+    highlights: [
+      "One of Switzerland's five university hospitals",
+      "1,568 beds and more than 11,000 staff; over 50,000 admissions a year",
+      "University-level centres in oncology, cardiac surgery, neuroscience and more",
+      "Teaching and research with the University of Lausanne and EPFL",
+    ],
+    fees: "As a public hospital it bills under basic health insurance; private and semi-private wards are available at a supplement.",
+    website: "https://www.chuv.ch/en",
+  },
 };
