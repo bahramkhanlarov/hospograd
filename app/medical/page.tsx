@@ -124,13 +124,14 @@ export default function MedicalPage() {
           <h2 className="mb-4 font-display text-[1.4rem] font-normal tracking-[-0.01em] text-foreground">
             Best hospitals in Switzerland
           </h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {Object.entries(CLINICS).map(([slug, clinic]) => (
               <ClinicCard
                 key={slug}
                 slug={slug}
                 name={clinic.name}
                 location={clinic.location}
+                img={clinic.img}
                 description={clinic.intro}
               />
             ))}
@@ -224,27 +225,38 @@ function ClinicCard({
   slug,
   name,
   location,
+  img,
   description,
 }: {
   slug: string;
   name: string;
   location: string;
+  img: string;
   description: string;
 }) {
   return (
     <Link
       href={`/clinics/${slug}`}
-      className="group block rounded-md border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/50 hover:bg-card-hover"
+      className="group block overflow-hidden rounded-md border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
     >
-      <div className="mb-2 aspect-video rounded-sm bg-muted" />
-      <h3 className="mb-1 text-[0.95rem] font-semibold text-foreground group-hover:text-primary">
-        {name}
-      </h3>
-      <p className="mb-1 text-[0.75rem] font-medium text-primary">{location}</p>
-      <p className="line-clamp-3 text-[0.82rem] text-muted-foreground">{description}</p>
-      <span className="mt-3 inline-block text-[0.75rem] font-medium text-primary">
-        View profile →
-      </span>
+      <div className="aspect-[4/3] overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={img}
+          alt={`${name} facility`}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4">
+        <h3 className="mb-1 text-[0.95rem] font-semibold text-foreground group-hover:text-primary">
+          {name}
+        </h3>
+        <p className="mb-1 text-[0.75rem] font-medium text-primary">{location}</p>
+        <p className="line-clamp-3 text-[0.82rem] text-muted-foreground">{description}</p>
+        <span className="mt-3 inline-block text-[0.75rem] font-medium text-primary">
+          View profile →
+        </span>
+      </div>
     </Link>
   );
 }

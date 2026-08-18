@@ -29,7 +29,13 @@ export default async function ClinicPage({ params }: { params: Promise<{ slug: s
       />
       <div className="flex-1">
         {/* Hero */}
-        <div className="relative flex h-[320px] items-end overflow-hidden bg-[oklch(20%_0.02_155)]">
+        <div className="relative flex h-[320px] items-end overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={clinic.img}
+            alt={`${clinic.name} facility`}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[oklch(20%_0.02_155/0.85)] via-[oklch(20%_0.02_155/0.3)] to-transparent" />
           <div className="relative z-10 mx-auto w-full max-w-4xl px-5 pb-8">
             <h1 className="font-display max-w-xl text-[2rem] font-medium leading-[1.1] text-white text-balance">
@@ -51,6 +57,16 @@ export default async function ClinicPage({ params }: { params: Promise<{ slug: s
             <Fact label="Specialty" value={clinic.focus} />
             <Fact label="Fees" value={clinic.fees} />
           </div>
+
+          {/* About the clinic */}
+          <section className="mb-10">
+            <h2 className="font-display mb-2 text-[1.15rem] font-medium text-foreground">
+              About the clinic
+            </h2>
+            <p className="max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              {clinic.description}
+            </p>
+          </section>
 
           <div className="grid gap-8 md:grid-cols-2">
             <section>
@@ -114,7 +130,14 @@ export default async function ClinicPage({ params }: { params: Promise<{ slug: s
                   href={`/clinics/${otherSlug}`}
                   className="group block overflow-hidden rounded-md border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="aspect-[4/3] bg-muted" />
+                  <div className="aspect-[4/3] overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={otherClinic.img}
+                      alt=""
+                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
+                  </div>
                   <div className="p-3">
                     <h3 className="text-[0.82rem] font-semibold leading-snug text-foreground group-hover:text-primary">
                       {otherClinic.name}
