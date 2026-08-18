@@ -24,6 +24,7 @@ export interface FinanceGuideInfo {
   description: string;
   sections: readonly FinanceGuideSection[];
   sources: readonly FinanceGuideSource[];
+  affiliateSlugs?: readonly string[];
 }
 
 export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
@@ -55,6 +56,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "AHV/IV – salary contributions (official)", url: "https://www.ahv-iv.ch/p/2.01.e" },
       { label: "BSV – overview of social security contributions (official)", url: "https://www.bsv.admin.ch/en/contributions-overview" },
     ],
+    affiliateSlugs: ["comparis"],
   },
   "quellensteuer": {
     name: "Tax at Source (Quellensteuer)",
@@ -106,6 +108,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "FOPH – premium comparison (official)", url: "https://www.bag.admin.ch/en/health-insurance-comparison-of-premiums" },
       { label: "Priminfo – official insurance comparison", url: "https://www.priminfo.admin.ch" },
     ],
+    affiliateSlugs: ["comparis"],
   },
   "banking": {
     name: "Banking & Money Apps in Switzerland",
@@ -132,6 +135,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "Mustachian Post – card fees abroad (2026)", url: "https://www.mustachianpost.com/blog/save-on-card-fees-abroad/" },
       { label: "Mustachian Post – best Swiss credit cards", url: "https://www.mustachianpost.com/best-credit-card-switzerland/" },
     ],
+    affiliateSlugs: ["yuh"],
   },
   "pillar-3a": {
     name: "Pillar 3a: The Tax-Saving Retirement Account",
@@ -158,6 +162,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "UBS – pillar 3a maximum contributions 2026", url: "https://www.ubs.com/ch/en/services/pension/pillar-3/maximal-contribution.html" },
       { label: "Mustachian Post – switching pillar 3a: when, costs, why", url: "https://www.mustachianpost.com/blog/switch-pillar-3a-when-costs-why/" },
     ],
+    affiliateSlugs: ["yuh"],
   },
   "budgeting": {
     name: "Budgeting & Saving on a Swiss Salary",
@@ -184,6 +189,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "Mustachian Post – FIRE in Geneva at 45 (case study)", url: "https://www.mustachianpost.com/blog/financial-independence-geneva-case-study/" },
       { label: "Mustachian Post – YNAB review", url: "https://www.mustachianpost.com/ynab-review/" },
     ],
+    affiliateSlugs: ["ynabs"],
   },
   "investing": {
     name: "Investing: Getting Started with Index Funds",
@@ -209,5 +215,6 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "Mustachian Post – best broker for Swiss investors", url: "https://www.mustachianpost.com/best-broker-in-switzerland/" },
       { label: "Mustachian Post – tracking Interactive Brokers in YNAB", url: "https://www.mustachianpost.com/blog/track-interactive-brokers-ynab/" },
     ],
+    affiliateSlugs: ["interactive-brokers", "degiro", "saxo-bank"],
   },
 };

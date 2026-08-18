@@ -2,6 +2,11 @@ import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
+import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
+import {
+  AFFILIATE_PROGRAMS,
+  affiliateUrl,
+} from "@/lib/affiliates";
 
 // Finance guide detail pages — hero, an intro paragraph, structured sections
 // with verified figures, a cited-sources block, a forum link into the
@@ -17,6 +22,10 @@ export default async function FinanceGuidePage({ params }: { params: Promise<{ s
   if (!guide) return <NotFound />;
 
   const otherGuides = Object.entries(FINANCE_GUIDES).filter(([s]) => s !== slug);
+
+  const relatedPrograms = (guide.affiliateSlugs ?? [])
+    .map((s) => AFFILIATE_PROGRAMS.find((p) => p.slug === s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   return (
     <>
@@ -78,6 +87,48 @@ export default async function FinanceGuidePage({ params }: { params: Promise<{ s
               ))}
             </ul>
           </section>
+
+          {/* Tools we recommend (affiliate links) */}
+          {relatedPrograms.length > 0 ? (
+            <section className="mb-10">
+              <h2 className="font-display mb-3 text-[1.15rem] font-medium text-foreground">
+                Tools we recommend
+              </h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                {relatedPrograms.map((program) => (
+                  <div
+                    key={program.slug}
+                    className="flex flex-col rounded-md border border-border bg-card p-5 shadow-sm"
+                  >
+                    <div className="mb-1 flex items-center justify-between gap-2">
+                      <h3 className="text-[0.95rem] font-semibold text-foreground">
+                        {program.name}
+                      </h3>
+                      {program.note ? (
+                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[0.68rem] font-medium text-primary">
+                          {program.note}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className="mb-4 flex-1 text-[0.82rem] leading-relaxed text-muted-foreground">
+                      {program.description}
+                    </p>
+                    <Link
+                      href={affiliateUrl(program)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-sm border border-border px-3 py-1.5 text-center text-[0.78rem] font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+                    >
+                      Visit {program.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                <AffiliateDisclosure />
+              </div>
+            </section>
+          ) : null}
 
           {/* Community CTA, not a lead-gen form */}
           <section className="mt-10 rounded-md border border-border bg-secondary p-5">

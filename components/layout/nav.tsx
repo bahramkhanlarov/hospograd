@@ -59,6 +59,7 @@ export function Nav({ className }: { className?: string }) {
     { href: "/careers", label: "Careers" },
     { href: "/medical", label: "Medical" },
     { href: "/finance", label: "Finance" },
+    { href: "/tools", label: "Tools" },
   ];
 
   return (
