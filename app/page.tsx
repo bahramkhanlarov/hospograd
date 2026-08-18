@@ -1,14 +1,16 @@
-// Next.js port of the vanilla homepage (public/index.html). Composes the
-// shared layout (Nav, Breadcrumb, Task 7), the school-banner strip and
-// homepage intro paragraph ported from index.html, the new Globe section
-// (Task 4) placed below the intro strip per the spec, and the forum-index /
-// thread-list tables ported from public/js/home.js.
+// Homepage landing. Composes the shared Nav, a photo hero with primary CTAs,
+// the school-logo strip as a trust bar, the four section tiles, a compact
+// "popular in the community" strip, and the forum category / thread tables.
+// The interactive globe that used to sit below the intro is deliberately
+// dropped from the homepage: it was decorative and pushed the real content
+// below the fold.
 
 import { Suspense } from "react";
 import { Nav } from "@/components/layout/nav";
-import { Breadcrumb } from "@/components/layout/breadcrumb";
+import { Hero } from "@/components/home/hero";
 import { SchoolBanner } from "@/components/home/school-banner";
-import { GlobeSection } from "@/components/home/globe-section";
+import { SectionTiles } from "@/components/home/section-tiles";
+import { PopularThreads } from "@/components/home/popular-threads";
 import { ForumIndex } from "@/components/home/forum-index";
 import { ThreadList } from "@/components/home/thread-list";
 
@@ -25,15 +27,20 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <Breadcrumb items={[{ label: "Home" }]} />
+      <Hero />
       <SchoolBanner />
-      <div className="mx-auto w-full max-w-5xl flex-1 px-5 py-4">
-        <p className="font-display mb-[1.1rem] text-[1.15rem] italic leading-[1.4] text-muted-foreground">
-          Switzerland&rsquo;s community for hotel management students and
-          alumni, covering housing, visas, jobs, and everything in between.
-        </p>
-        <GlobeSection />
-        <ForumIndex />
+      <div className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
+        <SectionTiles />
+
+        <div className="mb-10 rounded-md border border-border bg-card p-6 shadow-sm">
+          <h2 className="font-display mb-3 text-[1.6rem] font-medium text-foreground">
+            Browse the boards
+          </h2>
+          <ForumIndex />
+        </div>
+
+        <PopularThreads />
+
         <Suspense fallback={<ThreadListFallback />}>
           <ThreadList />
         </Suspense>
