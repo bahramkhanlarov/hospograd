@@ -1,6 +1,7 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
+import { CLINICS } from "@/lib/clinics";
 
 export const dynamic = "force-dynamic";
 
@@ -25,45 +26,6 @@ const SPECIALTIES = [
   { name: "Rehabilitation", slug: "rehabilitation" },
   { name: "Rheumatology", slug: "rheumatology" },
   { name: "Urology", slug: "urology" },
-];
-
-const FEATURED_HOSPITALS = [
-  {
-    name: "cereneo Hertenstein",
-    location: "Hertenstein, Lake Lucerne",
-    description:
-      "Specialist neurological rehabilitation centre with a focus on stroke and neurodegenerative conditions.",
-  },
-  {
-    name: "Clinique Nescens",
-    location: "Genolier, Lake Geneva Area",
-    description:
-      "Preventive medicine and check-up clinic offering comprehensive health assessments and wellness programs.",
-  },
-  {
-    name: "Rehaklinik Seewis",
-    location: "Seewis, Swiss Alps",
-    description:
-      "Rehabilitation clinic for musculoskeletal, neurological and cardiac conditions in an alpine setting.",
-  },
-  {
-    name: "Klinik Schloss Mammern",
-    location: "Mammern, Lake Constance region",
-    description:
-      "Holistic medical clinic combining conventional medicine with complementary therapies.",
-  },
-  {
-    name: "Hirslanden Klinik Aarau",
-    location: "Zurich Region",
-    description:
-      "Part of the Hirslanden private hospital group, offering a wide range of surgical and medical services.",
-  },
-  {
-    name: "Rehaklinik Tschugg",
-    location: "Tschugg, Bern Region",
-    description:
-      "Rehabilitation centre specializing in neurology, orthopaedics and psychosomatic medicine.",
-  },
 ];
 
 export default function MedicalPage() {
@@ -163,22 +125,14 @@ export default function MedicalPage() {
             Best hospitals in Switzerland
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURED_HOSPITALS.map((h) => (
-              <div
-                key={h.name}
-                className="rounded-md border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/50 hover:bg-card-hover"
-              >
-                <div className="mb-2 aspect-video rounded-sm bg-muted" />
-                <h3 className="mb-1 text-[0.95rem] font-semibold text-foreground">
-                  {h.name}
-                </h3>
-                <p className="mb-1 text-[0.75rem] font-medium text-primary">
-                  {h.location}
-                </p>
-                <p className="text-[0.82rem] text-muted-foreground">
-                  {h.description}
-                </p>
-              </div>
+            {Object.entries(CLINICS).map(([slug, clinic]) => (
+              <ClinicCard
+                key={slug}
+                slug={slug}
+                name={clinic.name}
+                location={clinic.location}
+                description={clinic.intro}
+              />
             ))}
           </div>
           <div className="mt-4 text-center">
@@ -263,5 +217,34 @@ export default function MedicalPage() {
         </div>
       </div>
     </>
+  );
+}
+
+function ClinicCard({
+  slug,
+  name,
+  location,
+  description,
+}: {
+  slug: string;
+  name: string;
+  location: string;
+  description: string;
+}) {
+  return (
+    <Link
+      href={`/clinics/${slug}`}
+      className="group block rounded-md border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/50 hover:bg-card-hover"
+    >
+      <div className="mb-2 aspect-video rounded-sm bg-muted" />
+      <h3 className="mb-1 text-[0.95rem] font-semibold text-foreground group-hover:text-primary">
+        {name}
+      </h3>
+      <p className="mb-1 text-[0.75rem] font-medium text-primary">{location}</p>
+      <p className="line-clamp-3 text-[0.82rem] text-muted-foreground">{description}</p>
+      <span className="mt-3 inline-block text-[0.75rem] font-medium text-primary">
+        View profile →
+      </span>
+    </Link>
   );
 }

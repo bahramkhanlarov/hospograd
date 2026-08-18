@@ -46,6 +46,9 @@ export default function CareersPage() {
                 {t.name}
               </h3>
               <p className="text-[0.82rem] text-muted-foreground">{t.desc}</p>
+              <span className="mt-3 inline-block text-[0.78rem] font-medium text-primary">
+                Browse threads →
+              </span>
             </Link>
           ))}
         </div>
@@ -120,6 +123,31 @@ export default function CareersPage() {
           >
             Browse discussions
           </Link>
+        </section>
+
+        {/* Info section */}
+        <section className="mt-6 rounded-md border border-border bg-card p-6 shadow-sm">
+          <h2 className="mb-3 font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
+            Working in Swiss hospitality, briefly
+          </h2>
+          <div className="space-y-4 text-[0.85rem] leading-relaxed text-muted-foreground">
+            <p>
+              Swiss hospitality programs graduate well over a thousand
+              students a year, and most of that talent flows into hotels,
+              luxury retail, events and corporate roles across Europe and
+              the Gulf. The strongest paths out of a Swiss school are
+              still management trainee programs and the alumni network of
+              your own campus.
+            </p>
+            <p>
+              Salaries in Switzerland run well ahead of most of Europe, but
+              so does the cost of living. Beyond the obvious hotel roles,
+              former students go into recruitment, F&amp;B management,
+              airline and cruise hospitality, private banking services and
+              boutique retail. The threads above are where the current
+              conversation is happening.
+            </p>
+          </div>
         </section>
       </div>
     </>

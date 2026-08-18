@@ -128,6 +128,7 @@ export default function EducationPage() {
                   name={school.name}
                   location={school.location}
                   img={school.img}
+                  description={school.desc}
                 />
               ))}
             </div>
@@ -151,6 +152,7 @@ export default function EducationPage() {
                   name={school.name}
                   location={school.location}
                   img={school.img}
+                  description={school.intro}
                 />
               ))}
             </div>
@@ -176,6 +178,7 @@ export default function EducationPage() {
                   name={camp.name}
                   location={camp.location}
                   img={camp.cardImg}
+                  description={camp.intro}
                 />
               ))}
             </div>
@@ -222,6 +225,7 @@ export default function EducationPage() {
                   name={camp.name}
                   location={camp.location}
                   img={camp.cardImg}
+                  description={camp.intro}
                 />
               ))}
             </div>
@@ -308,12 +312,14 @@ function CampCard({
   name,
   location,
   img,
+  description,
 }: {
   slug: string;
   basePath: "camps" | "winter-camps" | "boarding-schools" | "hospitality-schools";
   name: string;
   location: string;
   img: string;
+  description: string;
 }) {
   return (
     <Link
@@ -324,7 +330,7 @@ function CampCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={img}
-          alt=""
+          alt={`${name} campus`}
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
@@ -333,6 +339,12 @@ function CampCard({
           {name}
         </h3>
         <p className="text-[0.75rem] text-muted-foreground">{location}</p>
+        <p className="mt-2 line-clamp-3 text-[0.78rem] leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+        <span className="mt-3 inline-block text-[0.75rem] font-medium text-primary">
+          View profile →
+        </span>
       </div>
     </Link>
   );
