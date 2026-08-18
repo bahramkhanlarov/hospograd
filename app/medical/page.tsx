@@ -3,6 +3,7 @@ import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import { CLINICS } from "@/lib/clinics";
 import { SPECIALTIES } from "@/lib/specialties";
+import ClinicMap from "@/components/medical/clinic-map";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +79,20 @@ export default function MedicalPage() {
             </div>
           </section>
         </div>
+
+        {/* Clinic map */}
+        <section className="mb-10">
+          <div className="mb-4">
+            <h2 className="font-display text-[1.4rem] font-normal tracking-[-0.01em] text-foreground">
+              Clinics by region
+            </h2>
+            <p className="mt-1 max-w-3xl text-[0.88rem] leading-relaxed text-muted-foreground">
+              Our hospitals and clinics across Switzerland, colour-coded by
+              region. Click a dot to open the clinic&rsquo;s page.
+            </p>
+          </div>
+          <ClinicMap />
+        </section>
 
         {/* Medical Specialties */}
         <section className="mb-10 rounded-md border border-border bg-card p-6 shadow-sm">
