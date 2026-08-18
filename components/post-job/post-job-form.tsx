@@ -1,9 +1,11 @@
-// Client-side job posting form. Submits to /api/jobs/checkout to create a
-// Stripe Checkout Session, then redirects the browser to Stripe.
+// Client-side job posting form. Submits to /api/jobs: free jobs publish
+// immediately (returning a postId and showing inline success); featured jobs
+// return a Stripe Checkout URL that the browser redirects to.
 
 "use client";
 
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import { apiPost } from "@/lib/api";
 
 const PRICE_CHF = 99;
@@ -18,6 +20,8 @@ interface FormState {
   applyUrl: string;
 }
 
+type Tier = "free" | "featured";
+
 const EMPLOYMENT_TYPES = [
   "Full-time",
   "Part-time",
@@ -26,6 +30,12 @@ const EMPLOYMENT_TYPES = [
   "Seasonal",
   "Casual / on-call",
 ] as const;
+
+interface SubmitResult {
+  postId?: string;
+  url?: string;
+  featured?: boolean;
+}
 
 export function PostJobForm() {
   const [form, setForm] = useState<FormState>({
@@ -37,8 +47,10 @@ export function PostJobForm() {
     contactEmail: "",
     applyUrl: "",
   });
+  const [tier, setTier] = useState<Tier>("free");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [publishedPostId, setPublishedPostId] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -55,19 +67,26 @@ export function PostJobForm() {
       setSubmitting(true);
 
       try {
-        const result = await apiPost<{ url: string; listingId: string }>(
-          "/api/jobs/checkout",
-          {
-            company: form.company,
-            title: form.title,
-            location: form.location,
-            employmentType: form.employmentType,
-            description: form.description,
-            contactEmail: form.contactEmail,
-            applyUrl: form.applyUrl || undefined,
-          },
-        );
-        window.location.href = result.url;
+        const result = await apiPost<SubmitResult>("/api/jobs", {
+          company: form.company,
+          title: form.title,
+          location: form.location,
+          employmentType: form.employmentType,
+          description: form.description,
+          contactEmail: form.contactEmail,
+          applyUrl: form.applyUrl || undefined,
+          featured: tier === "featured",
+        });
+        if (result.featured && result.url) {
+          window.location.href = result.url;
+          return;
+        }
+        if (result.postId) {
+          setPublishedPostId(result.postId);
+          setSubmitting(false);
+          return;
+        }
+        throw new Error("Unexpected response from server.");
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Something went wrong.";
@@ -75,8 +94,29 @@ export function PostJobForm() {
         setSubmitting(false);
       }
     },
-    [form],
+    [form, tier],
   );
+
+  if (publishedPostId) {
+    return (
+      <div className="rounded-md border border-border bg-card p-5 text-center shadow-sm">
+        <h1 className="font-display mb-2 text-[1.5rem] font-medium text-foreground">
+          Your job is live
+        </h1>
+        <p className="mb-6 text-[0.9rem] text-muted-foreground">
+          Thanks for posting to HospoGrad. You can upgrade to a Featured
+          listing anytime — pinned to the top of the Jobs &amp; Internships
+          board for 30 days.
+        </p>
+        <Link
+          href={`/posts/${publishedPostId}`}
+          className="inline-block rounded-sm bg-primary px-4 py-2 text-[0.85rem] font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+        >
+          View your listing
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-md border border-border bg-card p-5 shadow-sm">
@@ -85,18 +125,61 @@ export function PostJobForm() {
       </h1>
       <p className="mb-5 text-[0.85rem] leading-relaxed text-muted-foreground">
         Reach verified hospitality students and recent graduates across
-        Switzerland. Your listing is pinned to the top of the Jobs &amp;
-        Internships board for 30 days.
+        Switzerland. Posting is free — optionally pin your listing to the top
+        of the Jobs &amp; Internships board for 30 days.
       </p>
 
-      <div className="mb-5 rounded-md border border-primary/30 bg-primary/5 px-4 py-3 text-[0.85rem]">
-        <span className="font-semibold text-foreground">
-          CHF {PRICE_CHF} one-time
-        </span>{" "}
-        <span className="text-muted-foreground">
-          &middot; pay securely with Stripe &middot; 30 days featured
-        </span>
-      </div>
+      <fieldset className="mb-5 grid gap-3 sm:grid-cols-2">
+        <legend className="mb-1 block text-[0.82rem] font-medium text-muted-foreground">
+          Posting tier
+        </legend>
+        <label
+          className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 text-[0.85rem] ${
+            tier === "free"
+              ? "border-primary bg-primary/5"
+              : "border-border bg-background hover:bg-card-hover"
+          }`}
+        >
+          <input
+            type="radio"
+            name="tier"
+            value="free"
+            checked={tier === "free"}
+            onChange={() => setTier("free")}
+            className="mt-1"
+          />
+          <span>
+            <span className="font-semibold text-foreground">Free</span>{" "}
+            <span className="text-muted-foreground">
+              &middot; publish immediately
+            </span>
+          </span>
+        </label>
+        <label
+          className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 text-[0.85rem] ${
+            tier === "featured"
+              ? "border-primary bg-primary/5"
+              : "border-border bg-background hover:bg-card-hover"
+          }`}
+        >
+          <input
+            type="radio"
+            name="tier"
+            value="featured"
+            checked={tier === "featured"}
+            onChange={() => setTier("featured")}
+            className="mt-1"
+          />
+          <span>
+            <span className="font-semibold text-foreground">
+              Featured · CHF {PRICE_CHF}
+            </span>{" "}
+            <span className="text-muted-foreground">
+              &middot; pinned for 30 days
+            </span>
+          </span>
+        </label>
+      </fieldset>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -242,8 +325,12 @@ export function PostJobForm() {
           className="inline-flex items-center justify-center rounded-sm bg-primary px-4 py-2 text-[0.85rem] font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-50"
         >
           {submitting
-            ? "Redirecting to payment\u2026"
-            : `Continue to payment \u00b7 CHF ${PRICE_CHF}`}
+            ? tier === "featured"
+              ? "Redirecting to payment\u2026"
+              : "Publishing\u2026"
+            : tier === "featured"
+              ? `Continue to payment \u00b7 CHF ${PRICE_CHF}`
+              : "Publish for free"}
         </button>
       </form>
     </div>

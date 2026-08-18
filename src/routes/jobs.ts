@@ -2,23 +2,29 @@ import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { createCheckoutSession, getCheckoutSession } from "../lib/stripe";
 import {
+  FREE_POST_LIMIT_PER_HOUR,
   JOB_LISTING_PRICE_CHF,
+  countRecentFreePosts,
   createPendingListing,
   getListingBySession,
-  publishPaidJob,
+  listingToJobInput,
+  publishJob,
 } from "../lib/jobs";
 
-// Pay-per-posting job board. Two public endpoints (no auth — employers are
-// not forum users):
-//   POST /api/jobs/checkout  — validate the job, insert a pending listing,
-//                              create a Stripe Checkout Session, return {url}.
+// Pay-per-posting job board with a free tier. Employers are not forum users,
+// so both endpoints are public:
+//   POST /api/jobs  — validate the job. If featured, create a pending listing
+//                     + Stripe Checkout Session and return {url}. If free,
+//                     publish the post immediately (rate-limited) and return
+//                     {postId}.
 //   GET  /api/jobs/status?session_id=… — poll a session; when paid, publish
-//                              the post (idempotent) and return {postId}.
-// The success page polls status; the checkout URL is where the employer pays.
+//                     the post as featured (idempotent) and return {postId}.
+// The success page polls status for featured jobs; free jobs link straight to
+// the post.
 
 export const jobs = new Hono<{ Bindings: Bindings }>();
 
-jobs.post("/checkout", async (c) => {
+jobs.post("/", async (c) => {
   let input: {
     company?: unknown;
     title?: unknown;
@@ -27,6 +33,7 @@ jobs.post("/checkout", async (c) => {
     description?: unknown;
     contactEmail?: unknown;
     applyUrl?: unknown;
+    featured?: unknown;
   };
   try {
     input = await c.req.json();
@@ -47,6 +54,7 @@ jobs.post("/checkout", async (c) => {
     typeof input.applyUrl === "string" && input.applyUrl.trim()
       ? input.applyUrl.trim()
       : undefined;
+  const featured = input.featured === true;
 
   if (!company || !title || !location || !employmentType || !description || !contactEmail) {
     return c.json(
@@ -58,6 +66,30 @@ jobs.post("/checkout", async (c) => {
     return c.json({ error: "contactEmail is not a valid email address" }, 400);
   }
 
+  const job = {
+    company,
+    title,
+    location,
+    employmentType,
+    description,
+    contactEmail,
+    applyUrl,
+  };
+
+  // Free tier: publish immediately.
+  if (!featured) {
+    const recent = await countRecentFreePosts(c.env);
+    if (recent >= FREE_POST_LIMIT_PER_HOUR) {
+      return c.json(
+        { error: "Too many free posts this hour. Try again later or feature your listing." },
+        429,
+      );
+    }
+    const postId = await publishJob(c.env, job, { featured: false });
+    return c.json({ postId, featured: false }, 201);
+  }
+
+  // Featured tier: collect payment first, publish on confirmation.
   const secretKey = c.env.STRIPE_SECRET_KEY;
   if (!secretKey) {
     return c.json(
@@ -66,15 +98,7 @@ jobs.post("/checkout", async (c) => {
     );
   }
 
-  const listing = await createPendingListing(c.env, {
-    company,
-    title,
-    location,
-    employmentType,
-    description,
-    contactEmail,
-    applyUrl,
-  });
+  const listing = await createPendingListing(c.env, job);
 
   const origin = new URL(c.req.url).origin;
   const checkout = await createCheckoutSession(secretKey, {
@@ -94,7 +118,7 @@ jobs.post("/checkout", async (c) => {
     .bind(checkout.id, listing.id)
     .run();
 
-  return c.json({ url: checkout.url, listingId: listing.id }, 201);
+  return c.json({ url: checkout.url, listingId: listing.id, featured: true }, 201);
 });
 
 jobs.get("/status", async (c) => {
@@ -126,6 +150,9 @@ jobs.get("/status", async (c) => {
     return c.json({ status: "pending", postId: null });
   }
 
-  const postId = await publishPaidJob(c.env, listing);
+  const postId = await publishJob(c.env, listingToJobInput(listing), {
+    listing,
+    featured: true,
+  });
   return c.json({ status: "paid", postId });
 });

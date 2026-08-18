@@ -1,5 +1,8 @@
 // Job-listings helpers shared by the jobs API routes and tests. The publish
 // step is pure DB logic (no Stripe), so it is fully testable without network.
+// Two tiers: free posts publish immediately (not pinned); featured posts go
+// through Stripe Checkout and are pinned to the top of the category for a
+// fixed window once payment is confirmed.
 
 import type { Bindings } from "../index";
 import { newId } from "../lib/id";
@@ -19,41 +22,48 @@ export interface JobListingRow {
   created_at: number;
 }
 
-// Price for a job-board listing, in Swiss francs.
+export interface JobInput {
+  company: string;
+  title: string;
+  location: string;
+  employmentType: string;
+  description: string;
+  contactEmail: string;
+  applyUrl?: string;
+}
+
+// Price for pinning a listing as featured, in Swiss francs.
 export const JOB_LISTING_PRICE_CHF = 99;
 
-// How long a paid listing stays pinned to the top of the category.
+// How long a featured listing stays pinned to the top of the category.
 export const FEATURED_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
-export function buildJobPostBody(listing: JobListingRow): string {
+// Spam guard for the public, no-auth free-posting endpoint: cap how many
+// free posts the team account publishes per hour.
+export const FREE_POST_LIMIT_PER_HOUR = 10;
+const HOUR_MS = 60 * 60 * 1000;
+
+export function buildJobPostBody(job: JobInput): string {
   const lines = [
-    `${listing.company} is hiring.`,
+    `${job.company} is hiring.`,
     "",
-    `**Role:** ${listing.title}`,
-    `**Location:** ${listing.location}`,
-    `**Type:** ${listing.employment_type}`,
+    `**Role:** ${job.title}`,
+    `**Location:** ${job.location}`,
+    `**Type:** ${job.employmentType}`,
     "",
-    listing.description,
+    job.description,
     "",
-    `**How to apply:** ${listing.contact_email}`,
+    `**How to apply:** ${job.contactEmail}`,
   ];
-  if (listing.apply_url) {
-    lines.push(`or via ${listing.apply_url}`);
+  if (job.applyUrl) {
+    lines.push(`or via ${job.applyUrl}`);
   }
   return lines.join("\n");
 }
 
 export async function createPendingListing(
   env: Bindings,
-  input: {
-    company: string;
-    title: string;
-    location: string;
-    employmentType: string;
-    description: string;
-    contactEmail: string;
-    applyUrl?: string;
-  },
+  input: JobInput,
 ): Promise<JobListingRow> {
   const id = newId();
   const now = Date.now();
@@ -104,15 +114,31 @@ export async function getListingBySession(
     .first<JobListingRow>();
 }
 
-// Creates the visible post for a paid listing. Idempotent: if the listing
-// already has a post_id, returns it without inserting again. Posts go into
-// the jobs-internships category, authored by the reserved team account, and
-// are pinned as featured for FEATURED_WINDOW_MS.
-export async function publishPaidJob(
+export function listingToJobInput(listing: JobListingRow): JobInput {
+  return {
+    company: listing.company,
+    title: listing.title,
+    location: listing.location,
+    employmentType: listing.employment_type,
+    description: listing.description,
+    contactEmail: listing.contact_email,
+    applyUrl: listing.apply_url ?? undefined,
+  };
+}
+
+// Creates the visible post for a job. Featured posts go in the
+// jobs-internships category pinned as featured for FEATURED_WINDOW_MS;
+// free posts are pinned for zero time (featured stays 0). Both are authored
+// by the reserved team account. Idempotent: if the listing already has a
+// post_id, returns it without inserting again.
+export async function publishJob(
   env: Bindings,
-  listing: JobListingRow,
+  job: JobInput,
+  opts: { listing?: JobListingRow; featured: boolean },
 ): Promise<string> {
-  if (listing.post_id) {
+  const { listing, featured } = opts;
+
+  if (listing?.post_id) {
     return listing.post_id;
   }
 
@@ -128,23 +154,41 @@ export async function publishPaidJob(
   await env.DB.prepare(
     `INSERT INTO posts
        (id, author_id, category_id, title, body, image_keys, score, created_at, featured, featured_until)
-     VALUES (?, 'hospograd-team', ?, ?, ?, '[]', 0, ?, 1, ?)`
+     VALUES (?, 'hospograd-team', ?, ?, ?, '[]', 0, ?, ?, ?)`
   )
     .bind(
       postId,
       category.id,
-      listing.title,
-      buildJobPostBody(listing),
+      job.title,
+      buildJobPostBody(job),
       now,
-      now + FEATURED_WINDOW_MS,
+      featured ? 1 : 0,
+      featured ? now + FEATURED_WINDOW_MS : null,
     )
     .run();
 
-  await env.DB.prepare(
-    `UPDATE job_listings SET status = 'paid', post_id = ? WHERE id = ? AND post_id IS NULL`
-  )
-    .bind(postId, listing.id)
-    .run();
+  if (listing) {
+    await env.DB.prepare(
+      `UPDATE job_listings SET status = 'paid', post_id = ? WHERE id = ? AND post_id IS NULL`
+    )
+      .bind(postId, listing.id)
+      .run();
+  }
 
   return postId;
+}
+
+// Counts posts the team account published to the jobs-internships category
+// within the last hour — used to rate-limit the public, no-auth free-posting
+// endpoint (all free posts carry the team account as author).
+export async function countRecentFreePosts(env: Bindings): Promise<number> {
+  const since = Date.now() - HOUR_MS;
+  const row = await env.DB.prepare(
+    `SELECT COUNT(*) AS count
+     FROM posts p JOIN categories c ON c.id = p.category_id
+     WHERE c.slug = 'jobs-internships' AND p.author_id = 'hospograd-team' AND p.created_at > ?`
+  )
+    .bind(since)
+    .first<{ count: number }>();
+  return row?.count ?? 0;
 }
