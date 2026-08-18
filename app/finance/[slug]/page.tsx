@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
 import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
+import { ShareCta } from "@/components/share/share-cta";
 import {
   AFFILIATE_PROGRAMS,
   affiliateUrl,
@@ -201,6 +202,21 @@ export default async function FinanceGuidePage({ params }: { params: Promise<{ s
             >
               Discuss on the forum
             </Link>
+          </section>
+
+          {/* Share / invite loop */}
+          <section className="mt-10">
+            <h2 className="font-display mb-1.5 text-[1.05rem] font-medium text-foreground">
+              Know someone starting out in Switzerland?
+            </h2>
+            <p className="mb-4 max-w-2xl text-[0.85rem] leading-relaxed text-muted-foreground">
+              Forward this guide to a classmate, friend or colleague — the
+              short answer at the top makes it worth their while.
+            </p>
+            <ShareCta
+              title={`${guide.name} | HospoGrad`}
+              text={guide.keyTakeaway}
+            />
           </section>
 
           {/* Other guides */}

@@ -86,6 +86,23 @@ export default function FinancePage() {
           </Link>
         </section>
 
+        {/* Share / invite loop */}
+        <section className="mt-6 rounded-md border border-border bg-card p-6 shadow-sm">
+          <h2 className="mb-3 font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
+            Found these useful?
+          </h2>
+          <p className="mb-4 text-[0.85rem] leading-relaxed text-muted-foreground">
+            Know a classmate starting their first Swiss job? Send them the
+            guides — or the whole site.
+          </p>
+          <Link
+            href="/invite"
+            className="inline-block rounded-sm bg-primary px-4 py-2 text-[0.85rem] font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+          >
+            Invite a classmate
+          </Link>
+        </section>
+
         {/* Info section */}
         <section className="mt-6 rounded-md border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-3 font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
