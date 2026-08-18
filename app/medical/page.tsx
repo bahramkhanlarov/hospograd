@@ -2,31 +2,9 @@ import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import { CLINICS } from "@/lib/clinics";
+import { SPECIALTIES } from "@/lib/specialties";
 
 export const dynamic = "force-dynamic";
-
-const SPECIALTIES = [
-  { name: "Aesthetics", slug: "aesthetics" },
-  { name: "Angiology", slug: "angiology" },
-  { name: "Cardiology", slug: "cardiology" },
-  { name: "Dermatology", slug: "dermatology" },
-  { name: "Endocrinology", slug: "endocrinology" },
-  { name: "Gastroenterology", slug: "gastroenterology" },
-  { name: "Hematology", slug: "hematology" },
-  { name: "Medical Check-Up", slug: "checkup" },
-  { name: "Nephrology", slug: "nephrology" },
-  { name: "Neurology", slug: "neurology" },
-  { name: "Obstetrics and Gynecology", slug: "obgyn" },
-  { name: "Oncology", slug: "oncology" },
-  { name: "Ophthalmology", slug: "ophthalmology" },
-  { name: "Orthopaedics", slug: "orthopaedics" },
-  { name: "Otorhinolaryngology", slug: "ent" },
-  { name: "Psychiatry", slug: "psychiatry" },
-  { name: "Pulmonology", slug: "pulmonology" },
-  { name: "Rehabilitation", slug: "rehabilitation" },
-  { name: "Rheumatology", slug: "rheumatology" },
-  { name: "Urology", slug: "urology" },
-];
 
 export default function MedicalPage() {
   return (
@@ -107,10 +85,10 @@ export default function MedicalPage() {
             Medical specialties
           </h2>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-            {SPECIALTIES.map((s) => (
+            {Object.entries(SPECIALTIES).map(([slug, s]) => (
               <Link
-                key={s.slug}
-                href="/category/general"
+                key={slug}
+                href={`/medical/${slug}`}
                 className="rounded-sm border border-border px-3 py-2 text-[0.82rem] text-link transition-colors hover:border-primary/50 hover:bg-card-hover"
               >
                 {s.name} &rarr;
