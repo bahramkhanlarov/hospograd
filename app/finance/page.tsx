@@ -1,9 +1,27 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Personal Finance in Switzerland | HospoGrad",
+  description:
+    "Guides to Swiss money for hospitality students and graduates: first salary, tax at source, health insurance, banking, saving and index investing. Figures verified against official Swiss sources.",
+  alternates: {
+    canonical: "https://hospograd-web.bahram-khanlarov.workers.dev/finance",
+  },
+  openGraph: {
+    title: "Personal Finance in Switzerland | HospoGrad",
+    description:
+      "Guides to Swiss money for hospitality students and graduates: first salary, tax at source, health insurance, banking, saving and index investing.",
+    url: "https://hospograd-web.bahram-khanlarov.workers.dev/finance",
+    type: "website",
+    siteName: "HospoGrad",
+  },
+};
 
 export default function FinancePage() {
   const guides = Object.entries(FINANCE_GUIDES);

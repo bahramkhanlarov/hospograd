@@ -22,6 +22,9 @@ export interface FinanceGuideInfo {
   name: string;
   intro: string;
   description: string;
+  // Answer-first line shown under the hero — the direct answer to the
+  // question the guide title poses, before any prose.
+  keyTakeaway: string;
   sections: readonly FinanceGuideSection[];
   sources: readonly FinanceGuideSource[];
   affiliateSlugs?: readonly string[];
@@ -34,6 +37,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "What actually lands in your bank account, and what gets taken out before it does.",
     description:
       "A Swiss employment contract quotes a gross annual salary, but the number you see in your contract is not the number you can spend. Between the social-insurance deductions, pension contributions and income tax, roughly 15–20% of a typical hospitality salary is deducted before it reaches your account. Understanding each line of your payslip — and what you are legally entitled to — is the first step to actually building savings in Switzerland.",
+    keyTakeaway:
+      "Roughly 15–20% of a typical gross salary is deducted before it reaches your account: ~7.05% social insurance, ~1.1% unemployment insurance, the 2nd-pillar pension (from ~7%), and income tax — either Quellensteuer or an annual return.",
     sections: [
       {
         heading: "The 13th salary and the monthly rhythm",
@@ -64,6 +69,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "How income tax works when your employer withholds it from your salary — and when you still need to file a return.",
     description:
       "Tax at source is the way Switzerland collects income tax from most foreign nationals who do not yet hold a C permit. Instead of receiving a tax bill after the year ends, your employer withholds tax from each monthly salary and forwards it to your canton. For many students and new graduates this is genuinely simpler — the tax is already paid — but there are important cases where you must still file an ordinary tax return.",
+    keyTakeaway:
+      "If you work in Switzerland without a C permit, your employer withholds income tax from each monthly salary — but you may still need to file a tax return if your income, wealth or deductions make it worthwhile, and you stop being taxed at source once you hold a C permit.",
     sections: [
       {
         heading: "Who is taxed at source",
@@ -89,6 +96,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "The mandatory basic insurance you must take out within three months of arriving — and how to keep the premium low.",
     description:
       "Basic health insurance (Krankenpflegeversicherung, or LAMal/KVG) is compulsory for everyone residing in Switzerland. You must sign up with an approved insurer within three months of taking up residence — if you miss the deadline the canton assigns you an insurer and you may owe back premiums. There is no way around this cost, but how much you pay is partly within your control: the choice of deductible, insurer and insurance model can move your monthly premium by well over a hundred francs.",
+    keyTakeaway:
+      "Mandatory basic insurance costs about CHF 393/month on average in 2026 (CHF 326 for 18–25s), and you can cut it by choosing a high deductible and a managed-care model — many students also qualify for a cantonal premium reduction of 50% or more.",
     sections: [
       {
         heading: "How much it costs",
@@ -116,6 +125,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "Opening a Swiss account, choosing a low-fee bank, and using budgeting apps the way Swiss FIRE bloggers do.",
     description:
       "You will need a Swiss bank account (or a fintech alternative) for your salary, rent payments and the QR-bill payments that Swiss invoicing relies on. Traditional cantonal banks charge CHF 5–10 a month for a basic package, but a growing number of free alternatives — from Neobank to the Bank WIR 'Bankpaket top' — offer zero-cost accounts and cards. This guide covers what to look for and how to keep banking fees to basically zero.",
+    keyTakeaway:
+      "Free Swiss banking is realistic: Yuh, Neobank and Bank WIR's Bankpaket top all offer zero-cost accounts with a debit card. Skip fee-charging credit cards for daily spending, watch foreign-transaction fees (up to 2%), and automate a payday transfer to savings or 3a.",
     sections: [
       {
         heading: "Free banking is realistic",
@@ -143,6 +154,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "The voluntary Swiss retirement account that cuts your tax bill today and grows tax-free for decades.",
     description:
       "Pillar 3a is the voluntary, tax-privileged savings account at the heart of Swiss retirement planning. Any employed person with OASI income can pay in every year, deduct the full contribution from their taxable income, and watch the money grow without tax until it is withdrawn. For a young hospitality professional it is often the single most tax-efficient place to save — the annual contribution limit is roughly CHF 7,000, and the tax saving can be CHF 1,000–2,000 a year depending on your canton and salary.",
+    keyTakeaway:
+      "You can contribute up to CHF 7,258 in 2026 (CHF 36,288 or 20% of net income if you have no 2nd pillar), deduct the full amount from your taxable income, and grow it tax-free — a tax saving of roughly CHF 1,000–2,000 a year at a typical salary.",
     sections: [
       {
         heading: "How much you can pay in",
@@ -170,6 +183,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "Making a 50–80% savings rate realistic on a normal salary — the way the Swiss FIRE community actually does it.",
     description:
       "Swiss salaries are among the highest in Europe, and so is the cost of living. The good news for anyone starting a career is that the 'save as much as you can, early' principle works unusually well here, because wages outpace most people's expenses within a few years. The Swiss FIRE community — bloggers like Mustachian Post and their readers — regularly reach savings rates of 50–80%, and the methods are simple enough to start on a first salary.",
+    keyTakeaway:
+      "The Swiss FIRE community reaches savings rates of 50–80% on normal salaries by paying themselves first: a standing order to savings and 3a on payday, envelope budgeting for the rest, and cutting the big three — housing, health insurance and groceries.",
     sections: [
       {
         heading: "Build the budget backwards",
@@ -197,6 +212,8 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       "Low-cost ETF investing in Switzerland — where to open an account, and why simplicity beats stock-picking.",
     description:
       "For most people the long-term savings engine is not the bank account but low-cost index funds (ETFs). Switzerland has a well-regulated set of discount brokers — Interactive Brokers, DEGIRO and Saxo Bank are the three most recommended by the Swiss FIRE community — where you can buy world index ETFs for small monthly amounts. The core idea is deliberately boring: own the whole global market, keep costs tiny, and let decades of compounding do the work.",
+    keyTakeaway:
+      "Buy the whole global market with a single low-cost world index ETF (0.2% fees vs 1.5% for active funds), from CHF 50–100 a month at a discount broker — Interactive Brokers, DEGIRO or Saxo Bank — and let decades of compounding do the work. No stock-picking needed.",
     sections: [
       {
         heading: "Why index funds, not individual stocks",

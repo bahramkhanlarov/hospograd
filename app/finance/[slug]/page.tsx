@@ -1,6 +1,7 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
 import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
 import {
@@ -8,13 +9,42 @@ import {
   affiliateUrl,
 } from "@/lib/affiliates";
 
-// Finance guide detail pages — hero, an intro paragraph, structured sections
-// with verified figures, a cited-sources block, a forum link into the
-// money-taxes category, and a link to the other guides. Mirror of the
-// /medical/[slug] structure. No photography per guide, so the hero uses the
-// site's pine design colour.
+// Finance guide detail pages — hero, an answer-first takeaway, an intro
+// paragraph, structured sections with verified figures, a cited-sources
+// block, a forum link into the money-taxes category, and a link to the other
+// guides. Mirror of the /medical/[slug] structure. No photography per guide,
+// so the hero uses the site's pine design colour.
+//
+// SEO: each guide gets its own title/description via generateMetadata (the
+// root layout only ships a generic site title), plus Article JSON-LD so the
+// guide can surface as a rich result for "how Swiss salary deductions work"
+// style queries.
 
 export const dynamic = "force-dynamic";
+
+const SITE = "https://hospograd-web.bahram-khanlarov.workers.dev";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const guide = FINANCE_GUIDES[slug];
+  if (!guide) return { title: "Finance guide not found | HospoGrad" };
+  return {
+    title: `${guide.name} | HospoGrad`,
+    description: guide.description,
+    alternates: { canonical: `${SITE}/finance/${slug}` },
+    openGraph: {
+      title: `${guide.name} | HospoGrad`,
+      description: guide.description,
+      url: `${SITE}/finance/${slug}`,
+      type: "article",
+      siteName: "HospoGrad",
+    },
+  };
+}
 
 export default async function FinanceGuidePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -27,8 +57,23 @@ export default async function FinanceGuidePage({ params }: { params: Promise<{ s
     .map((s) => AFFILIATE_PROGRAMS.find((p) => p.slug === s))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.name,
+    description: guide.description,
+    author: { "@type": "Organization", name: "HospoGrad" },
+    publisher: { "@type": "Organization", name: "HospoGrad" },
+    mainEntityOfPage: `${SITE}/finance/${slug}`,
+    inLanguage: "en",
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Nav />
       <Breadcrumb
         items={[
@@ -50,6 +95,16 @@ export default async function FinanceGuidePage({ params }: { params: Promise<{ s
         </div>
 
         <div className="mx-auto w-full max-w-4xl px-5 py-10">
+          {/* Answer-first takeaway */}
+          <div className="mb-10 rounded-md border border-primary/30 bg-primary/5 p-4">
+            <h2 className="mb-1 text-[0.7rem] font-semibold uppercase tracking-wide text-primary">
+              The short answer
+            </h2>
+            <p className="text-[0.9rem] leading-relaxed text-foreground">
+              {guide.keyTakeaway}
+            </p>
+          </div>
+
           {/* Intro */}
           <p className="mb-10 max-w-2xl text-[0.95rem] leading-relaxed text-foreground">
             {guide.description}
