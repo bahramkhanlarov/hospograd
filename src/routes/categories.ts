@@ -30,8 +30,11 @@ categories.get("/:slug/posts", async (c) => {
   }
 
   let query, params;
+  const featuredOrder =
+    "CASE WHEN p.featured = 1 AND p.featured_until > strftime('%s','now') * 1000 THEN 0 ELSE 1 END,";
   if (cursor) {
     query = `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at,
+                    p.featured, p.featured_until,
                     u.username, u.school, u.status,
                     COUNT(cm.id) AS comment_count
              FROM posts p
@@ -39,11 +42,12 @@ categories.get("/:slug/posts", async (c) => {
              LEFT JOIN comments cm ON cm.post_id = p.id
              WHERE p.category_id = ? AND p.created_at < ?
              GROUP BY p.id
-             ORDER BY ${sort}
+             ORDER BY ${featuredOrder} ${sort}
              LIMIT ?`;
     params = [category.id, parseInt(cursor), limit + 1];
   } else {
     query = `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at,
+                    p.featured, p.featured_until,
                     u.username, u.school, u.status,
                     COUNT(cm.id) AS comment_count
              FROM posts p
@@ -51,12 +55,12 @@ categories.get("/:slug/posts", async (c) => {
              LEFT JOIN comments cm ON cm.post_id = p.id
              WHERE p.category_id = ?
              GROUP BY p.id
-             ORDER BY ${sort}
+             ORDER BY ${featuredOrder} ${sort}
              LIMIT ?`;
     params = [category.id, limit + 1];
   }
 
-  const { results } = await c.env.DB.prepare(query).bind(...params).all<{ id: string; title: string; body: string; image_keys: string; score: number; created_at: number; username: string; school: string; status: string; comment_count: number }>();
+  const { results } = await c.env.DB.prepare(query).bind(...params).all<{ id: string; title: string; body: string; image_keys: string; score: number; created_at: number; featured: number; featured_until: number | null; username: string; school: string; status: string; comment_count: number }>();
   const hasMore = results.length > limit;
   if (hasMore) results.pop();
   const nextCursor = hasMore && results.length > 0 ? results[results.length - 1].created_at.toString() : null;

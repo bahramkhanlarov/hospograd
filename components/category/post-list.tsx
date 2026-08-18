@@ -14,6 +14,8 @@ interface PostRow {
   school: string;
   status: string;
   comment_count: number;
+  featured?: number;
+  featured_until?: number | null;
 }
 
 interface Category {
@@ -66,6 +68,13 @@ export function CategoryPostList({ slug }: { slug: string }) {
     });
   }
 
+  function isFeatured(p: PostRow) {
+    return (
+      p.featured === 1 &&
+      (p.featured_until ?? 0) > Date.now()
+    );
+  }
+
   return (
     <>
       <Breadcrumb
@@ -74,7 +83,7 @@ export function CategoryPostList({ slug }: { slug: string }) {
           { label: categoryName ?? slug },
         ]}
       />
-      <div className="mb-2 flex gap-2">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         <a
           href={`/category/${encodeURIComponent(slug)}?sort=new`}
           className={`inline-block rounded-sm border px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold ${
@@ -95,6 +104,14 @@ export function CategoryPostList({ slug }: { slug: string }) {
         >
           Top
         </a>
+        {slug === "jobs-internships" ? (
+          <a
+            href="/post-job"
+            className="ml-auto inline-block rounded-sm border border-primary bg-primary px-[0.9rem] py-[0.4rem] text-[0.82rem] font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+          >
+            + Post a job
+          </a>
+        ) : null}
       </div>
 
       {loading ? (
@@ -145,6 +162,11 @@ export function CategoryPostList({ slug }: { slug: string }) {
                     >
                       {p.title}
                     </a>
+                    {isFeatured(p) ? (
+                      <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-primary">
+                        Featured
+                      </span>
+                    ) : null}
                     <div className="mt-0.5 text-[0.75rem] text-muted-foreground">
                       by{" "}
                       <a

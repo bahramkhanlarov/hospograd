@@ -64,6 +64,7 @@ posts.get("/", async (c) => {
     : "";
 
   const baseQuery = `SELECT p.id, p.title, p.body, p.image_keys, p.score, p.created_at, p.category_id,
+                            p.featured, p.featured_until,
                             u.username, u.school, u.status,
                             COALESCE(COUNT(cm.id), 0) AS comment_count
                      FROM posts p
@@ -74,10 +75,10 @@ posts.get("/", async (c) => {
                          : ""
                      }
                      GROUP BY p.id
-                     ORDER BY ${sort}
+                     ORDER BY CASE WHEN p.featured = 1 AND p.featured_until > strftime('%s','now') * 1000 THEN 0 ELSE 1 END, ${sort}
                      LIMIT ?`;
 
-  const { results } = await c.env.DB.prepare(baseQuery).bind(...params).all<{ id: string; title: string; body: string; image_keys: string; score: number; created_at: number; category_id: number; username: string; school: string; status: string; comment_count: number }>();
+  const { results } = await c.env.DB.prepare(baseQuery).bind(...params).all<{ id: string; title: string; body: string; image_keys: string; score: number; created_at: number; category_id: number; featured: number; featured_until: number | null; username: string; school: string; status: string; comment_count: number }>();
   const hasMore = results.length > limit;
   if (hasMore) results.pop();
   const nextCursor = hasMore && results.length > 0 ? results[results.length - 1].created_at.toString() : null;

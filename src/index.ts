@@ -9,6 +9,7 @@ import { reports } from "./routes/reports";
 import { users } from "./routes/users";
 import { uploads } from "./routes/uploads";
 import { suggestions } from "./routes/suggestions";
+import { jobs } from "./routes/jobs";
 import { generateSuggestionForPost } from "./lib/ai";
 
 export type Bindings = {
@@ -18,6 +19,7 @@ export type Bindings = {
   SESSION_SECRET: string;
   RESEND_API_KEY: string;
   OPENROUTER_API_KEY: string;
+  STRIPE_SECRET_KEY: string;
 };
 
 export const app = new Hono<{ Bindings: Bindings }>();
@@ -34,6 +36,7 @@ api.route("/reports", reports);
 api.route("/users", users);
 api.route("/uploads", uploads);
 api.route("/suggestions", suggestions);
+api.route("/jobs", jobs);
 
 app.route("/api", api);
 
