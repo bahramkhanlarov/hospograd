@@ -5,6 +5,8 @@ import { CAMPS } from "@/lib/camps";
 import { WINTER_CAMPS } from "@/lib/winter-camps";
 import { BOARDING_SCHOOLS } from "@/lib/boarding-schools";
 import { HOSPITALITY_SCHOOLS } from "@/lib/hospitality-schools";
+import { AffiliateProgramGrid } from "@/components/affiliate/affiliate-program-grid";
+import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
 
 // Restyled onto the site's pine/copper design system (see app/globals.css)
 // with real Alpine photography instead of gradient-plus-emoji tiles.
@@ -238,7 +240,7 @@ export default function EducationPage() {
             </h2>
             <p className="mb-6 max-w-2xl text-[0.88rem] leading-relaxed text-muted-foreground">
               A shorter list than summer, mostly built around the fact that
-              everyone's on the slopes half the day.
+              everyone&rsquo;s on the slopes half the day.
             </p>
             <div className="flex flex-wrap gap-2">
               {WINTER_CAMP_PROGRAMS.map((program) => (
@@ -251,6 +253,17 @@ export default function EducationPage() {
               ))}
             </div>
           </section>
+
+          {/* Language courses & textbooks */}
+          <div className="mb-14">
+            <AffiliateProgramGrid
+              title="Language courses &amp; textbooks"
+              slugs={["babbel", "orell-fussli"]}
+            />
+            <div className="mt-4">
+              <AffiliateDisclosure />
+            </div>
+          </div>
 
           {/* Popular in the community: real threads, not a fake news stub */}
           <section className="mb-14">

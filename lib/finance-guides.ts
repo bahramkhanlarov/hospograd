@@ -146,7 +146,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "Mustachian Post – card fees abroad (2026)", url: "https://www.mustachianpost.com/blog/save-on-card-fees-abroad/" },
       { label: "Mustachian Post – best Swiss credit cards", url: "https://www.mustachianpost.com/best-credit-card-switzerland/" },
     ],
-    affiliateSlugs: ["yuh"],
+    affiliateSlugs: ["yuh", "neon", "ubs-key4"],
   },
   "pillar-3a": {
     name: "Pillar 3a: The Tax-Saving Retirement Account",
@@ -175,7 +175,7 @@ export const FINANCE_GUIDES: Record<string, FinanceGuideInfo> = {
       { label: "UBS – pillar 3a maximum contributions 2026", url: "https://www.ubs.com/ch/en/services/pension/pillar-3/maximal-contribution.html" },
       { label: "Mustachian Post – switching pillar 3a: when, costs, why", url: "https://www.mustachianpost.com/blog/switch-pillar-3a-when-costs-why/" },
     ],
-    affiliateSlugs: ["yuh"],
+    affiliateSlugs: ["yuh", "ubs-key4"],
   },
   "budgeting": {
     name: "Budgeting & Saving on a Swiss Salary",

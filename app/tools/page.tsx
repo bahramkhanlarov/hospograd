@@ -16,6 +16,9 @@ const CATEGORY_ORDER: readonly AffiliateCategory[] = [
   "insurance",
   "investing",
   "budgeting",
+  "education",
+  "career",
+  "travel",
 ];
 
 export default function ToolsPage() {

@@ -15,7 +15,10 @@ export type AffiliateCategory =
   | "banking"
   | "insurance"
   | "investing"
-  | "budgeting";
+  | "budgeting"
+  | "education"
+  | "career"
+  | "travel";
 
 export interface AffiliateProgram {
   slug: string;
@@ -36,6 +39,13 @@ const AFFILIATE_CODES: Record<string, string> = {
   "saxo-bank": "",
   ynabs: "",
   comparis: "",
+  neon: "",
+  "ubs-key4": "",
+  babbel: "",
+  "orell-fussli": "",
+  swisscare: "",
+  "linkedin-premium": "",
+  rezi: "",
 };
 
 export const AFFILIATE_PROGRAMS: readonly AffiliateProgram[] = [
@@ -105,6 +115,83 @@ export const AFFILIATE_PROGRAMS: readonly AffiliateProgram[] = [
     trackingValue: AFFILIATE_CODES.comparis,
     note: "Free",
   },
+  {
+    slug: "neon",
+    name: "neon",
+    category: "banking",
+    description:
+      "A genuinely free Swiss neobank account: no monthly fee, Swiss IBAN, eBill and the lowest foreign-currency markup among Swiss neobanks — a smart first account for a student salary.",
+    url: "https://www.neon-free.ch/en/",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES.neon,
+    note: "Free",
+  },
+  {
+    slug: "ubs-key4",
+    name: "UBS key4",
+    category: "banking",
+    description:
+      "UBS's digital-only bank account: free basic account, free card, and pillar 3a investing inside the same app — a solid choice if you'd rather stay with an established Swiss bank.",
+    url: "https://www.ubs.com/ch/en/services/digital-banking/mobile-banking/key4.html",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES["ubs-key4"],
+    note: "Free",
+  },
+  {
+    slug: "babbel",
+    name: "Babbel",
+    category: "education",
+    description:
+      "The practical language app for learning the French or German you'll actually use in a Swiss hotel or front office — short daily lessons that fit around shifts.",
+    url: "https://www.babbel.com/",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES.babbel,
+    note: "First lesson free",
+  },
+  {
+    slug: "orell-fussli",
+    name: "Orell Füssli",
+    category: "education",
+    description:
+      "Switzerland's largest bookshop, online and in 75 stores. A reliable place to find the hospitality and language textbooks your course requires.",
+    url: "https://www.orellfuessli.ch/",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES["orell-fussli"],
+    note: "Swiss bookshop",
+  },
+  {
+    slug: "swisscare",
+    name: "Swisscare",
+    category: "travel",
+    description:
+      "Health and accident cover for international students, interns and au pairs in Switzerland from around CHF 38/month — a well-known route to the exemption from Swiss basic insurance.",
+    url: "https://swisscare.com/en/product/international-student-health-insurance-switzerland",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES.swisscare,
+    note: "From CHF 38/mo",
+  },
+  {
+    slug: "linkedin-premium",
+    name: "LinkedIn Premium",
+    category: "career",
+    description:
+      "See who viewed your profile, get InMail to reach hiring managers directly, and access LinkedIn Learning courses — useful while applying to management trainee programs.",
+    url: "https://www.linkedin.com/premium/",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES["linkedin-premium"],
+    note: "1-month free trial",
+  },
+  {
+    slug: "rezi",
+    name: "Rezi",
+    category: "career",
+    description:
+      "An AI resume builder that tailors your CV to a job description and scores it against what hiring software actually reads — a free way to fix the CV before you send it.",
+    url: "https://www.rezi.ai/",
+    trackingParam: "utm_source",
+    trackingValue: AFFILIATE_CODES.rezi,
+    note: "Free tier",
+  },
 ];
 
 export function affiliateUrl(program: AffiliateProgram): string {
@@ -122,4 +209,7 @@ export const AFFILIATE_CATEGORY_LABELS: Record<AffiliateCategory, string> = {
   insurance: "Health insurance",
   investing: "Investing",
   budgeting: "Budgeting",
+  education: "Language courses & textbooks",
+  career: "Career tools",
+  travel: "Travel & student insurance",
 };

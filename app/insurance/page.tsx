@@ -3,6 +3,7 @@ import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
+import { AffiliateProgramGrid } from "@/components/affiliate/affiliate-program-grid";
 import { AFFILIATE_PROGRAMS, affiliateUrl } from "@/lib/affiliates";
 
 export const dynamic = "force-dynamic";
@@ -178,6 +179,15 @@ export default function InsurancePage() {
             </div>
           ) : null}
         </section>
+
+        {/* Alternative cover for students not yet on a Swiss policy */}
+        <AffiliateProgramGrid
+          title="Student cover &amp; travel insurance"
+          slugs={["swisscare"]}
+        />
+        <div className="mt-4">
+          <AffiliateDisclosure />
+        </div>
 
         {/* Community CTA */}
         <section className="rounded-md border border-border bg-secondary p-5">

@@ -3,6 +3,8 @@ import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
+import { AffiliateProgramGrid } from "@/components/affiliate/affiliate-program-grid";
+import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +68,17 @@ export default function FinancePage() {
               </span>
             </Link>
           ))}
+        </div>
+
+        {/* Bank & pillar 3a accounts */}
+        <div className="mt-6">
+          <AffiliateProgramGrid
+            title="Bank accounts &amp; pillar 3a"
+            slugs={["yuh", "neon", "ubs-key4"]}
+          />
+          <div className="mt-4">
+            <AffiliateDisclosure />
+          </div>
         </div>
 
         {/* Money & taxes community */}

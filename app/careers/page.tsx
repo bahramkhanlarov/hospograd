@@ -1,6 +1,8 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
 import Link from "next/link";
+import { AffiliateProgramGrid } from "@/components/affiliate/affiliate-program-grid";
+import { AffiliateDisclosure } from "@/components/affiliate/affiliate-disclosure";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +54,12 @@ export default function CareersPage() {
             </Link>
           ))}
         </div>
+
+        {/* Career tools */}
+        <AffiliateProgramGrid
+          title="Career tools we recommend"
+          slugs={["linkedin-premium", "rezi"]}
+        />
 
         {/* Every school gets its own community */}
         <section className="mt-10 rounded-md border border-border bg-card p-6 shadow-sm">
@@ -149,6 +157,10 @@ export default function CareersPage() {
             </p>
           </div>
         </section>
+
+        <div className="mt-6">
+          <AffiliateDisclosure />
+        </div>
       </div>
     </>
   );
