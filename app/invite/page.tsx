@@ -1,6 +1,6 @@
 import { Nav } from "@/components/layout/nav";
 import { Breadcrumb } from "@/components/layout/breadcrumb";
-import { ShareCta } from "@/components/share/share-cta";
+import { InviteShare } from "@/components/invite/invite-share";
 import { FINANCE_GUIDES } from "@/lib/finance-guides";
 
 // Invite loop landing page. No referral tracking yet — the loop is simply:
@@ -10,11 +10,7 @@ import { FINANCE_GUIDES } from "@/lib/finance-guides";
 
 export const dynamic = "force-dynamic";
 
-const SITE = "https://hospograd-web.bahram-khanlarov.workers.dev";
-
 const INVITE_TITLE = "Invite your classmates to HospoGrad";
-const INVITE_TEXT =
-  "HospoGrad is a free community for Swiss hotel-school students and grads — guides on first salaries, taxes, health insurance and banking, plus a real forum. Worth a look:";
 
 export const metadata = {
   title: `${INVITE_TITLE} | HospoGrad`,
@@ -51,11 +47,7 @@ export default function InvitePage() {
           <p className="mb-4 text-[0.85rem] leading-relaxed text-muted-foreground">
             Sends the site home page, plus the quickest useful links below.
           </p>
-          <ShareCta
-            title={INVITE_TITLE}
-            text={INVITE_TEXT}
-            url={SITE}
-          />
+          <InviteShare />
         </div>
 
         <section>

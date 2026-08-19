@@ -51,6 +51,63 @@ describe("POST /auth/signup (student)", () => {
     });
     expect(res.status).toBe(409);
   });
+
+  it("attributes the new account to the inviter when ref matches a username", async () => {
+    await SELF.fetch("https://example.com/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "inviteruser",
+        email: "inviter@ehl.ch",
+        password: "hunter22-password",
+        school: "EHL",
+        status: "student",
+      }),
+    });
+    const inviter = await env.DB.prepare("SELECT id FROM users WHERE username = ?")
+      .bind("inviteruser")
+      .first<{ id: string }>();
+
+    const res = await SELF.fetch("https://example.com/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "refuser",
+        email: "ref@ehl.ch",
+        password: "hunter22-password",
+        school: "EHL",
+        status: "student",
+        ref: "inviteruser",
+      }),
+    });
+    expect(res.status).toBe(201);
+
+    const invited = await env.DB.prepare("SELECT invited_by FROM users WHERE username = ?")
+      .bind("refuser")
+      .first<{ invited_by: string | null }>();
+    expect(invited?.invited_by).toBe(inviter!.id);
+  });
+
+  it("ignores an unknown ref instead of failing the signup", async () => {
+    const res = await SELF.fetch("https://example.com/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "badrefuser",
+        email: "badref@ehl.ch",
+        password: "hunter22-password",
+        school: "EHL",
+        status: "student",
+        ref: "nobody-calls-me",
+      }),
+    });
+    expect(res.status).toBe(201);
+
+    const invited = await env.DB.prepare("SELECT invited_by FROM users WHERE username = ?")
+      .bind("badrefuser")
+      .first<{ invited_by: string | null }>();
+    expect(invited?.invited_by).toBeNull();
+  });
 });
 
 describe("POST /auth/verify-otp", () => {

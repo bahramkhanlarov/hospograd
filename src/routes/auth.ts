@@ -80,13 +80,22 @@ async function sendOtpEmail(env: { RESEND_API_KEY: string }, email: string, code
   );
 }
 
+async function resolveInviterId(env: Bindings, ref: unknown): Promise<string | null> {
+  if (typeof ref !== "string" || !ref.trim()) return null;
+  const inviter = await env.DB.prepare("SELECT id FROM users WHERE username = ?")
+    .bind(ref.trim())
+    .first<{ id: string }>();
+  return inviter ? inviter.id : null;
+}
+
 auth.post("/signup", async (c) => {
-  const { username, email, password, school, status } = await c.req.json<{
+  const { username, email, password, school, status, ref } = await c.req.json<{
     username: string;
     email: string;
     password: string;
     school: string;
     status: "student" | "alumni";
+    ref?: string;
   }>();
 
   if (!username || !email || !password || !school || (status !== "student" && status !== "alumni")) {
@@ -102,15 +111,16 @@ auth.post("/signup", async (c) => {
 
   const id = newId();
   const passwordHash = await hashSecret(password);
+  const invitedBy = await resolveInviterId(c.env, ref);
 
   if (status === "student") {
     const code = generateOtpCode();
     const otpHash = await hashSecret(code);
     await c.env.DB.prepare(
-      `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, otp_hash, otp_expires_at, created_at)
-       VALUES (?, ?, ?, ?, ?, 'student', 'pending', ?, ?, ?)`
+      `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, otp_hash, otp_expires_at, invited_by, created_at)
+       VALUES (?, ?, ?, ?, ?, 'student', 'pending', ?, ?, ?, ?)`
     )
-      .bind(id, username, email, passwordHash, school, otpHash, Date.now() + OTP_TTL_MS, Date.now())
+      .bind(id, username, email, passwordHash, school, otpHash, Date.now() + OTP_TTL_MS, invitedBy, Date.now())
       .run();
 
     try {
@@ -128,10 +138,10 @@ auth.post("/signup", async (c) => {
 
   // Alumni path: no OTP, account starts pending and awaits Task 5's document upload.
   await c.env.DB.prepare(
-    `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, created_at)
-     VALUES (?, ?, ?, ?, ?, 'alumni', 'pending', ?)`
+    `INSERT INTO users (id, username, email, password_hash, school, status, verification_state, invited_by, created_at)
+     VALUES (?, ?, ?, ?, ?, 'alumni', 'pending', ?, ?)`
   )
-    .bind(id, username, email, passwordHash, school, Date.now())
+    .bind(id, username, email, passwordHash, school, invitedBy, Date.now())
     .run();
   return c.json({ message: "Account created. Submit alumni verification to finish." }, 201);
 });

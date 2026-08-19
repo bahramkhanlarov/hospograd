@@ -10,6 +10,7 @@ import { users } from "./routes/users";
 import { uploads } from "./routes/uploads";
 import { suggestions } from "./routes/suggestions";
 import { jobs } from "./routes/jobs";
+import { invite } from "./routes/invite";
 import { generateSuggestionForPost } from "./lib/ai";
 
 export type Bindings = {
@@ -37,6 +38,7 @@ api.route("/users", users);
 api.route("/uploads", uploads);
 api.route("/suggestions", suggestions);
 api.route("/jobs", jobs);
+api.route("/invite", invite);
 
 app.route("/api", api);
 
