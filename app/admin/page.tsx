@@ -45,6 +45,19 @@ interface Suggestion {
   post_author: string;
 }
 
+interface InsuranceLead {
+  id: string;
+  age: number;
+  canton: string;
+  deductible: number;
+  plan_model: string;
+  start_date: string;
+  email: string;
+  phone: string | null;
+  status: string;
+  created_at: number;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -73,6 +86,8 @@ export default function AdminPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [editedSuggestions, setEditedSuggestions] = useState<Record<string, string>>({});
+  const [leads, setLeads] = useState<InsuranceLead[]>([]);
+  const [loadingLeads, setLoadingLeads] = useState(true);
 
   const [loadingVerifications, setLoadingVerifications] = useState(true);
   const [loadingReports, setLoadingReports] = useState(true);
@@ -154,12 +169,27 @@ export default function AdminPage() {
     }
   }, []);
 
+  const fetchLeads = useCallback(async () => {
+    setLoadingLeads(true);
+    try {
+      const data = (await apiGet<{ leads: InsuranceLead[] }>(
+        "/api/admin/insurance/leads",
+      )) ?? { leads: [] };
+      setLeads(data.leads ?? []);
+    } catch {
+      setLeads([]);
+    } finally {
+      setLoadingLeads(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (checking || !me) return;
     fetchVerifications();
     fetchReports();
     fetchSuggestions();
-  }, [checking, me, fetchVerifications, fetchReports, fetchSuggestions]);
+    fetchLeads();
+  }, [checking, me, fetchVerifications, fetchReports, fetchSuggestions, fetchLeads]);
 
   // ---------------
   // Actions
@@ -321,6 +351,57 @@ export default function AdminPage() {
                       Reject
                     </button>
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* ─────── Insurance leads ─────── */}
+        <section>
+          <h2 className="mb-4 font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
+            Insurance leads
+          </h2>
+
+          {loadingLeads ? (
+            <p className="italic text-muted-foreground">Loading…</p>
+          ) : leads.length === 0 ? (
+            <p className="italic text-muted-foreground">
+              No insurance leads yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {leads.map((lead) => (
+                <div
+                  key={lead.id}
+                  className="rounded-md border border-border bg-card px-4 py-3"
+                >
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.85rem] leading-relaxed">
+                    <strong className="text-foreground">
+                      {lead.age}yo · {lead.canton}
+                    </strong>
+                    <span className="text-muted-foreground">
+                      Franchise {lead.deductible} · {lead.plan_model}
+                    </span>
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[0.68rem] font-medium text-primary">
+                      {lead.status}
+                    </span>
+                    <span className="ml-auto text-[0.72rem] text-muted-foreground">
+                      {new Date(lead.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[0.8rem] text-muted-foreground">
+                    Start {lead.start_date} ·{" "}
+                    <a
+                      href={`mailto:${lead.email}`}
+                      className="text-link hover:text-primary"
+                    >
+                      {lead.email}
+                    </a>
+                    {lead.phone ? (
+                      <span> · {lead.phone}</span>
+                    ) : null}
+                  </p>
                 </div>
               ))}
             </div>

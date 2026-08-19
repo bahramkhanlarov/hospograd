@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { requireVerified } from "../middleware/auth";
+import { listLeads } from "../lib/insurance";
 
 export const admin = new Hono<{ Bindings: Bindings; Variables: { userId: string; isAdmin: boolean } }>();
 
@@ -18,6 +19,11 @@ admin.get("/verifications", async (c) => {
      FROM users WHERE verification_state = 'pending' ORDER BY created_at ASC`
   ).all();
   return c.json({ users: results });
+});
+
+admin.get("/insurance/leads", async (c) => {
+  const leads = await listLeads(c.env);
+  return c.json({ leads });
 });
 
 admin.post("/verifications/:userId/approve", async (c) => {
