@@ -11,6 +11,7 @@ import { uploads } from "./routes/uploads";
 import { suggestions } from "./routes/suggestions";
 import { jobs } from "./routes/jobs";
 import { invite } from "./routes/invite";
+import { clinics } from "./routes/clinics";
 import { generateSuggestionForPost } from "./lib/ai";
 
 export type Bindings = {
@@ -39,6 +40,7 @@ api.route("/uploads", uploads);
 api.route("/suggestions", suggestions);
 api.route("/jobs", jobs);
 api.route("/invite", invite);
+api.route("/clinics", clinics);
 
 app.route("/api", api);
 

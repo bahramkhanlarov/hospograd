@@ -32,8 +32,7 @@ function formEncode(params: Record<string, string>): string {
 
 export interface CheckoutSessionInput {
   amountChf: number;
-  company: string;
-  jobTitle: string;
+  productName: string;
   successUrl: string;
   cancelUrl: string;
   metadata: Record<string, string>;
@@ -53,7 +52,7 @@ export async function createCheckoutSession(
     "line_items[0][quantity]": "1",
     "line_items[0][price_data][currency]": "chf",
     "line_items[0][price_data][unit_amount]": String(input.amountChf * 100),
-    "line_items[0][price_data][product_data][name]": `${input.jobTitle} — ${input.company}`,
+    "line_items[0][price_data][product_data][name]": input.productName,
     success_url: input.successUrl,
     cancel_url: input.cancelUrl,
   };

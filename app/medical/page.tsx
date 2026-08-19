@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CLINICS } from "@/lib/clinics";
 import { SPECIALTIES } from "@/lib/specialties";
 import ClinicMap from "@/components/medical/clinic-map";
+import { FeaturedClinicBanner } from "@/components/medical/featured-clinic-banner";
 
 export const dynamic = "force-dynamic";
 
@@ -114,9 +115,18 @@ export default function MedicalPage() {
 
         {/* Featured Hospitals */}
         <section className="mb-10">
-          <h2 className="mb-4 font-display text-[1.4rem] font-normal tracking-[-0.01em] text-foreground">
-            Best hospitals in Switzerland
-          </h2>
+          <FeaturedClinicBanner />
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display text-[1.4rem] font-normal tracking-[-0.01em] text-foreground">
+              Best hospitals in Switzerland
+            </h2>
+            <Link
+              href="/feature-clinic"
+              className="text-[0.78rem] font-medium text-link hover:text-primary"
+            >
+              Feature your clinic →
+            </Link>
+          </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {Object.entries(CLINICS).map(([slug, clinic]) => (
               <ClinicCard

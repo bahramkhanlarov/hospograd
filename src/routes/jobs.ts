@@ -103,8 +103,7 @@ jobs.post("/", async (c) => {
   const origin = new URL(c.req.url).origin;
   const checkout = await createCheckoutSession(secretKey, {
     amountChf: JOB_LISTING_PRICE_CHF,
-    company,
-    jobTitle: title,
+    productName: `${title} — ${company}`,
     successUrl: `${origin}/post-job/success?session_id={CHECKOUT_SESSION_ID}`,
     cancelUrl: `${origin}/post-job?cancelled=1`,
     metadata: {
