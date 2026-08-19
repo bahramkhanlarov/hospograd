@@ -247,6 +247,21 @@ export default function AdminPage() {
     }
   }
 
+  async function handleLeadStatus(leadId: string, status: string) {
+    setActingSuggestion(leadId);
+    try {
+      await apiPost(`/api/admin/insurance/leads/${encodeURIComponent(leadId)}/status`, {
+        status,
+      });
+      await fetchLeads();
+    } catch (err) {
+      console.error("lead status update failed", err);
+      alert(err instanceof Error ? err.message : "Status update failed");
+    } finally {
+      setActingSuggestion(null);
+    }
+  }
+
   async function handleApproveSuggestion(suggestionId: string, editedBody: string) {
     setActingSuggestion(suggestionId);
     try {
@@ -359,9 +374,17 @@ export default function AdminPage() {
 
         {/* ─────── Insurance leads ─────── */}
         <section>
-          <h2 className="mb-4 font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
-            Insurance leads
-          </h2>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="font-display text-[1.3rem] font-normal tracking-[-0.01em] text-foreground">
+              Insurance leads
+            </h2>
+            <a
+              href="/api/admin/insurance/leads/export"
+              className="rounded-sm border border-border bg-card px-3 py-1 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-card-hover"
+            >
+              Export CSV
+            </a>
+          </div>
 
           {loadingLeads ? (
             <p className="italic text-muted-foreground">Loading…</p>
@@ -402,6 +425,23 @@ export default function AdminPage() {
                       <span> · {lead.phone}</span>
                     ) : null}
                   </p>
+                  <div className="mt-2 flex items-center gap-1">
+                    {["new", "contacted", "converted", "rejected"].map((status) => (
+                      <button
+                        key={status}
+                        type="button"
+                        disabled={actingSuggestion === lead.id || lead.status === status}
+                        onClick={() => handleLeadStatus(lead.id, status)}
+                        className={`cursor-pointer rounded-sm px-2 py-0.5 text-[0.7rem] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                          lead.status === status
+                            ? "bg-primary text-white"
+                            : "border border-border bg-transparent text-muted-foreground hover:bg-card-hover"
+                        }`}
+                      >
+                        {status}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

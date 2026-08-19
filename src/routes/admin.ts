@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { Bindings } from "../index";
 import { requireVerified } from "../middleware/auth";
-import { listLeads } from "../lib/insurance";
+import { LEAD_STATUSES, leadsToCsv, listLeads, updateLeadStatus } from "../lib/insurance";
 
 export const admin = new Hono<{ Bindings: Bindings; Variables: { userId: string; isAdmin: boolean } }>();
 
@@ -24,6 +24,33 @@ admin.get("/verifications", async (c) => {
 admin.get("/insurance/leads", async (c) => {
   const leads = await listLeads(c.env);
   return c.json({ leads });
+});
+
+admin.get("/insurance/leads/export", async (c) => {
+  const leads = await listLeads(c.env);
+  const csv = leadsToCsv(leads);
+  return new Response(csv, {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="insurance-leads-${new Date()
+        .toISOString()
+        .slice(0, 10)}.csv"`,
+    },
+  });
+});
+
+admin.post("/insurance/leads/:id/status", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json().catch(() => null);
+  const status = body?.status;
+  if (!LEAD_STATUSES.includes(status)) {
+    return c.json({ error: `status must be one of ${LEAD_STATUSES.join(", ")}` }, 400);
+  }
+  const lead = await updateLeadStatus(c.env, id, status);
+  if (!lead) {
+    return c.json({ error: "Lead not found" }, 404);
+  }
+  return c.json({ lead });
 });
 
 admin.post("/verifications/:userId/approve", async (c) => {
